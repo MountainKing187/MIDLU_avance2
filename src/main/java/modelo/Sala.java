@@ -17,15 +17,15 @@ public class Sala {
 
     public Punto getUbicacion() { return ubicacion; }
 
-    public int getX() { return ubicacion.getX(); } // Método de conveniencia
+    public int getX() { return ubicacion.getX(); } // Métod de conveniencia
 
-    public int getY() { return ubicacion.getY(); } // Método de conveniencia
+    public int getY() { return ubicacion.getY(); } // Métod de conveniencia
 
     public int getAncho() { return ancho; }
 
     public int getAlto() { return alto; }
 
-    // Método para verificar si un punto está dentro de la sala
+    // Métod para verificar si un punto está dentro de la sala
     public boolean contiene(Punto punto) {
         if (!ubicacion.getPiso().equals(punto.getPiso())) {
             return false;

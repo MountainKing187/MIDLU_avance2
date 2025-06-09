@@ -13,5 +13,8 @@ public class Piso {
     private ArrayList<Salida> salidas;
     private boolean[][] mapaObstaculos; // matriz de navegabilidad
 
+    public void procesarBitmap(){
+
+    }
     // métodos para procesar el bitmap y generar mapaObstaculos
 }

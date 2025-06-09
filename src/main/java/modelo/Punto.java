@@ -22,7 +22,7 @@ public class Punto {
     public void setX(int x) { this.x = x; }
     public void setY(int y) { this.y = y; }
 
-    // Método para calcular distancia entre puntos
+    // Métod para calcular distancia entre puntos
     public double distanciaA(Punto otro) {
         if (!this.piso.equals(otro.getPiso())) {
             return Double.MAX_VALUE; // No están en el mismo piso
