@@ -1,14 +1,18 @@
 package modelo;
 
 public class Usuario {
-    private Punto ubicacion; // Ahora usa Punto en lugar de x,y separados
+    private Punto ubicacion;  // Ya estaba actualizado
     private boolean tieneDiscapacidad;
 
-    // Métodos actualizados
-    public boolean estaEnSalida() {
-        Salida salidaMasCercana = null /* lógica para encontrar salida más cercana */;
-        return ubicacion.distanciaA(new Punto(salidaMasCercana.getX(),
-                salidaMasCercana.getY(),
-                ubicacion.getPiso())) < 10; // Radio de 10px
+    // Métodos actualizados para usar la nueva estructura
+    public boolean estaEnSalida(Salida salida) {
+        return ubicacion.getPiso().equals(salida.getUbicacion().getPiso()) &&
+                ubicacion.distanciaA(salida.getUbicacion()) < 10; // Radio de 10px
     }
+
+    public boolean estaEnSala(Sala sala) {
+        return sala.contiene(ubicacion);
+    }
+
+    // Resto de métodos...
 }
