@@ -5,14 +5,12 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-public class ManejoBMP {
-    private int numero;
+public class ManejoMapaBmp {
     private String imagenPath;
     private boolean[][] mapaObstaculos; // true = obstáculo (pared)
     private BufferedImage imagenPiso;
 
-    public ManejoBMP(int numero, String imagenPath) {
-        this.numero = numero;
+    public ManejoMapaBmp(String imagenPath) {
         this.imagenPath = imagenPath;
         this.mapaObstaculos = null;
         this.imagenPiso = null;
@@ -29,10 +27,10 @@ public class ManejoBMP {
         this.mapaObstaculos = new boolean[ancho][alto];
 
         // 3. Analizar píxeles
-        for (int x = 0; x < ancho; x++) {
-            for (int y = 0; y < alto; y++) {
+        for (int y = 0; y < ancho; y++) {
+            for (int x = 0; x < alto; x++) {
                 int color = imagenPiso.getRGB(x, y);
-                mapaObstaculos[x][y] = esObstaculo(color);
+                mapaObstaculos[y][x] = esObstaculo(color);
             }
         }
     }
