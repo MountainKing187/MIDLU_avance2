@@ -24,11 +24,11 @@ public class ManejoMapaBmp {
         // 2. Inicializar matriz de obstáculos
         int ancho = imagenPiso.getWidth();
         int alto = imagenPiso.getHeight();
-        this.mapaObstaculos = new boolean[ancho][alto];
+        this.mapaObstaculos = new boolean[alto][ancho];
 
         // 3. Analizar píxeles
-        for (int y = 0; y < ancho; y++) {
-            for (int x = 0; x < alto; x++) {
+        for (int x = 0; x < ancho; x++) {
+            for (int y = 0; y < alto; y++) {
                 int color = imagenPiso.getRGB(x, y);
                 mapaObstaculos[y][x] = esObstaculo(color);
             }
