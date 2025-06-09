@@ -4,19 +4,16 @@ public abstract class PuntoAcceso {
     protected int x, y;
     protected Piso piso;
 
+    public PuntoAcceso(int x, int y, Piso piso) {
+        this.x = x;
+        this.y = y;
+        this.piso = piso;
+    }
+
     public abstract boolean esAccesibleParaDiscapacitados();
-}
 
-public class Ascensor extends PuntoAcceso {
-    @Override
-    public boolean esAccesibleParaDiscapacitados() {
-        return true;
-    }
-}
-
-public class Escalera extends PuntoAcceso {
-    @Override
-    public boolean esAccesibleParaDiscapacitados() {
-        return false;
-    }
+    // Getters y setters
+    public int getX() { return x; }
+    public int getY() { return y; }
+    public Piso getPiso() { return piso; }
 }
