@@ -34,4 +34,6 @@ public class Piso {
     public boolean esTransitable(int x, int y) {
         return !obstaculos[x][y];
     }
+
+    public boolean[][] getMapaObstaculos() { return obstaculos; }
 }
