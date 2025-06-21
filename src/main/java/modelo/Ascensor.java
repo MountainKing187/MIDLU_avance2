@@ -1,8 +1,8 @@
 package modelo;
 
 public class Ascensor extends PuntoAcceso {
-    public Ascensor(int x, int y, Piso piso) {
-        super(x, y, piso);
+    public Ascensor(Punto ubicacion, Piso piso) {
+        super(ubicacion, piso);
     }
 
     @Override

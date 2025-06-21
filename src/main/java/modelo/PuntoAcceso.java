@@ -3,7 +3,7 @@ package modelo;
 public abstract class PuntoAcceso {
     protected Punto ubicacion;
     protected Piso pisoActual;
-    protected PuntoAcceso puntoConectado; // Referencia directa al punto en el otro piso
+    protected PuntoAcceso puntoConectado;
 
     public PuntoAcceso(Punto ubicacion, Piso pisoActual) {
         this.ubicacion = ubicacion;

@@ -1,10 +1,9 @@
 package modelo;
 
 public class Usuario {
-    private Punto ubicacion;  // Ya estaba actualizado
+    private Punto ubicacion;
     private boolean tieneDiscapacidad;
 
-    // Métodos actualizados para usar la nueva estructura
     public boolean estaEnSalida(Salida salida) {
         return ubicacion.getPiso().equals(salida.getUbicacion().getPiso()) &&
                 ubicacion.distanciaA(salida.getUbicacion()) < 10; // Radio de 10px
@@ -18,6 +17,4 @@ public class Usuario {
     }
 
      */
-
-    // Resto de métodos...
 }
