@@ -10,9 +10,6 @@ public class Pathfinding {
             {1, 1}, {1, -1}, {-1, 1}, {-1, -1}}; // Movimientos diagonales
 
     public static Ruta encontrarRuta(Punto inicio, Punto fin, boolean evitarEscaleras) {
-        if (!inicio.getPiso().equals(fin.getPiso())) {
-            return encontrarRutaMultiPiso(inicio, fin, evitarEscaleras);
-        }
         return encontrarRutaMismoPiso(inicio, fin);
     }
 
@@ -63,22 +60,6 @@ public class Pathfinding {
         }
 
         return new Ruta(); // Ruta vacía si no se encuentra camino
-    }
-
-    private static Ruta encontrarRutaMultiPiso(Punto inicio, Punto fin, boolean evitarEscaleras) {
-        // Implementación simplificada - buscaría puntos de acceso conectados
-        // Esta es una versión básica que deberías expandir según tus necesidades
-
-        Ruta ruta = new Ruta();
-        ruta.agregarPunto(inicio);
-
-        // Aquí iría la lógica para:
-        // 1. Encontrar el ascensor/escalera más cercano al inicio
-        // 2. Encontrar el ascensor/escalera más cercano al destino
-        // 3. Calcular rutas entre estos puntos
-
-        ruta.agregarPunto(fin);
-        return ruta;
     }
 
     private static double heuristica(Punto a, Punto b) {
