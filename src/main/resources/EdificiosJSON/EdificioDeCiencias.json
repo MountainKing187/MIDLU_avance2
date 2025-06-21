@@ -1,0 +1,96 @@
+{
+  "nombre": "Edificio de Ciencias",
+  "pisos": [
+    {
+      "numero": 1,
+      "nombre": "Planta Baja",
+      "imagen": "edificio_ciencias/piso1.bmp",
+      "salas": [
+        {
+          "nombre": "Recepcion",
+          "ubicacion": {"x": 120, "y": 80},
+          "ancho": 50,
+          "alto": 30
+        },
+        {
+          "nombre": "Laboratorio 1",
+          "ubicacion": {"x": 200, "y": 150},
+          "ancho": 60,
+          "alto": 40
+        }
+      ],
+      "puntosAcceso": [
+        {
+          "tipo": "ASCENSOR",
+          "id": "ascensor_principal",
+          "x": 150,
+          "y": 300,
+          "conectadoId": "ascensor_principal_p2"
+        },
+        {
+          "tipo": "ESCALERA",
+          "id": "escalera_este",
+          "x": 400,
+          "y": 100,
+          "conectadoId": "escalera_este_p2"
+        }
+      ],
+      "salidas": [
+        {
+          "nombre": "Salida Principal",
+          "ubicacion": {"x": 10, "y": 10},
+          "esPrincipal": true
+        }
+      ]
+    },
+    {
+      "numero": 2,
+      "nombre": "Primer Piso",
+      "imagen": "edificio_ciencias/piso2.bmp",
+      "salas": [
+        {
+          "nombre": "Aula 201",
+          "ubicacion": {"x": 100, "y": 90},
+          "ancho": 55,
+          "alto": 35
+        }
+      ],
+      "puntosAcceso": [
+        {
+          "tipo": "ASCENSOR",
+          "id": "ascensor_principal_p2",
+          "x": 150,
+          "y": 300,
+          "conectadoId": "ascensor_principal"
+        },
+        {
+          "tipo": "ESCALERA",
+          "id": "escalera_este_p2",
+          "x": 400,
+          "y": 100,
+          "conectadoId": "escalera_este"
+        },
+        {
+          "tipo": "ASCENSOR",
+          "id": "ascensor_secundario",
+          "x": 500,
+          "y": 400,
+          "conectadoId": "ascensor_secundario_p3"
+        }
+      ]
+    }
+  ],
+  "configuracion": {
+    "colores": {
+      "paredes": "#000000",
+      "salas": "#0000FF",
+      "ascensores": "#FF0000",
+      "escaleras": "#FF6600",
+      "salidas": "#FFFF00"
+    },
+    "accesibilidad": {
+      "priorizarAscensores": true,
+      "rutaAlternativaSinAscensores": false
+    }
+  }
+}
