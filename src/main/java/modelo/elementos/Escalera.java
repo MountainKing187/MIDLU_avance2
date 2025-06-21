@@ -1,4 +1,8 @@
-package modelo;
+package modelo.elementos;
+
+import modelo.PuntoAcceso;
+import modelo.edificio.Piso;
+import modelo.navegacion.Punto;
 
 public class Escalera extends PuntoAcceso {
     public Escalera(Punto ubicacion, Piso piso) {

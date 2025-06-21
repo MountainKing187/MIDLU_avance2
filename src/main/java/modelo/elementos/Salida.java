@@ -1,4 +1,6 @@
-package modelo;
+package modelo.elementos;
+
+import modelo.navegacion.Punto;
 
 public class Salida {
     private String nombre;

@@ -1,5 +1,9 @@
-import algoritmos.Pathfinding;
-import modelo.*;
+import servicios.Pathfinding;
+import modelo.edificio.MapaProcesado;
+import modelo.edificio.Piso;
+import modelo.navegacion.Punto;
+import modelo.navegacion.Ruta;
+import servicios.ProcesadorMapa;
 
 import java.io.IOException;
 

@@ -1,4 +1,4 @@
-package modelo;
+package modelo.navegacion;
 
 import java.util.ArrayList;
 import java.util.List;

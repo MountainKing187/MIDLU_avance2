@@ -1,4 +1,6 @@
-package modelo;
+package modelo.navegacion;
+
+import modelo.edificio.Piso;
 
 import java.util.Objects;
 

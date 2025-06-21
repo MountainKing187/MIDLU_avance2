@@ -1,10 +1,15 @@
-package algoritmos;
+package servicios;
 
 import modelo.*;
+import modelo.edificio.Edificio;
+import modelo.edificio.Piso;
+import modelo.elementos.Sala;
+import modelo.navegacion.Punto;
+import modelo.navegacion.Ruta;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.HashMap;

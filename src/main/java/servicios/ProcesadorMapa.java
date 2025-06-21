@@ -1,4 +1,6 @@
-package modelo;
+package servicios;
+
+import modelo.edificio.MapaProcesado;
 
 import java.awt.image.BufferedImage;
 import java.io.File;

@@ -1,4 +1,8 @@
-package modelo;
+package modelo.edificio;
+
+import modelo.PuntoAcceso;
+import modelo.elementos.Sala;
+import modelo.elementos.Salida;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package modelo;
+package modelo.edificio;
 
 import java.awt.image.BufferedImage;
 

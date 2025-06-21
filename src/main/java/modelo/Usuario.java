@@ -1,5 +1,8 @@
 package modelo;
 
+import modelo.elementos.Salida;
+import modelo.navegacion.Punto;
+
 public class Usuario {
     private Punto ubicacion;
     private boolean tieneDiscapacidad;

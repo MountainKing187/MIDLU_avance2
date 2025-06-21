@@ -1,4 +1,6 @@
-package modelo;
+package modelo.elementos;
+
+import modelo.navegacion.Punto;
 
 import java.util.ArrayList;
 

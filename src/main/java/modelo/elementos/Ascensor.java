@@ -1,4 +1,8 @@
-package modelo;
+package modelo.elementos;
+
+import modelo.PuntoAcceso;
+import modelo.edificio.Piso;
+import modelo.navegacion.Punto;
 
 public class Ascensor extends PuntoAcceso {
     public Ascensor(Punto ubicacion, Piso piso) {

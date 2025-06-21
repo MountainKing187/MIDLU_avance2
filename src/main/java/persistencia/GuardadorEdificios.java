@@ -1,6 +1,6 @@
 package persistencia;
 
-import modelo.Edificio;
+import modelo.edificio.Edificio;
 
 public class GuardadorEdificios {
     public static void guardarEdificio(Edificio edificio, String nombreArchivo) {

@@ -1,5 +1,8 @@
 package modelo;
 
+import modelo.edificio.Piso;
+import modelo.navegacion.Punto;
+
 public abstract class PuntoAcceso {
     protected Punto ubicacion;
     protected Piso pisoActual;

@@ -1,6 +1,6 @@
 package interfaz;
 
-import modelo.Punto;
+import modelo.navegacion.Punto;
 
 import javax.swing.*;
 import java.awt.*;
