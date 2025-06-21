@@ -36,71 +36,49 @@ public class Navegador {
     public ArrayList<Ruta> calcularRutaCompleta(Punto inicio, Punto destino, boolean evitarEscaleras) {
         ArrayList<Ruta> rutasSegmentadas = new ArrayList<>();
 
-        // Caso simple: mismo piso
+        // Caso mismo piso (igual que antes)
         if (inicio.getPiso().equals(destino.getPiso())) {
             Ruta ruta = pathfinding.encontrarRuta(inicio, destino, evitarEscaleras);
-            if (!ruta.getPuntos().isEmpty()) {
-                rutasSegmentadas.add(ruta);
-            }
+            if (!ruta.getPuntos().isEmpty()) rutasSegmentadas.add(ruta);
             return rutasSegmentadas;
         }
 
-        // Encontrar secuencia óptima de puntos de acceso
         List<PuntoAcceso> puntosAccesoOptimos = encontrarSecuenciaPuntosAcceso(
                 inicio.getPiso(),
                 destino.getPiso(),
                 evitarEscaleras
         );
 
-        // No se encontró conexión entre pisos
-        if (puntosAccesoOptimos.isEmpty()) {
-            return rutasSegmentadas;
-        }
+        if (puntosAccesoOptimos.isEmpty()) return rutasSegmentadas;
 
-        // Calcular ruta en piso inicial hasta el primer punto de acceso
+        // Ruta inicial
         Ruta rutaInicial = pathfinding.encontrarRuta(
                 inicio,
                 puntosAccesoOptimos.get(0).getUbicacion(),
                 evitarEscaleras
         );
-
         if (!rutaInicial.getPuntos().isEmpty()) {
             rutasSegmentadas.add(rutaInicial);
         }
 
-        // Calcular rutas intermedias y cambios de piso
-        for (int i = 0; i < puntosAccesoOptimos.size() - 1; i++) {
-            PuntoAcceso actual = puntosAccesoOptimos.get(i);
-            PuntoAcceso siguiente = puntosAccesoOptimos.get(i + 1);
-
-            // Cambio de piso (representado como ruta especial)
-            Ruta cambioPiso = new Ruta();
-            cambioPiso.agregarPunto(actual.getUbicacion());
-            cambioPiso.agregarPunto(siguiente.getUbicacion());
-            rutasSegmentadas.add(cambioPiso);
-
-            // Ruta en el nuevo piso entre puntos de acceso
-            if (i < puntosAccesoOptimos.size() - 2) {
-                Ruta rutaIntermedia = pathfinding.encontrarRuta(
-                        siguiente.getUbicacion(),
-                        puntosAccesoOptimos.get(i + 2).getUbicacion(),
-                        evitarEscaleras
-                );
-
-                if (!rutaIntermedia.getPuntos().isEmpty()) {
-                    rutasSegmentadas.add(rutaIntermedia);
-                }
+        // Rutas intermedias (omitiendo el segmento de cambio)
+        for (int i = 1; i < puntosAccesoOptimos.size() - 1; i++) {
+            Ruta rutaIntermedia = pathfinding.encontrarRuta(
+                    puntosAccesoOptimos.get(i).getUbicacion(),
+                    puntosAccesoOptimos.get(i + 1).getUbicacion(),
+                    evitarEscaleras
+            );
+            if (!rutaIntermedia.getPuntos().isEmpty()) {
+                rutasSegmentadas.add(rutaIntermedia);
             }
         }
 
-        // Calcular ruta final en el último piso
-        PuntoAcceso ultimoPuntoAcceso = puntosAccesoOptimos.get(puntosAccesoOptimos.size() - 1);
+        // Ruta final
         Ruta rutaFinal = pathfinding.encontrarRuta(
-                ultimoPuntoAcceso.getUbicacion(),
+                puntosAccesoOptimos.get(puntosAccesoOptimos.size() - 1).getUbicacion(),
                 destino,
                 evitarEscaleras
         );
-
         if (!rutaFinal.getPuntos().isEmpty()) {
             rutasSegmentadas.add(rutaFinal);
         }

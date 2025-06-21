@@ -1,0 +1,71 @@
+{
+  "nombre": "Edificio Ejemplo",
+  "pisos": [
+    {
+      "numero": 1,
+      "nombre": "Planta Baja",
+      "imagen": "src/main/resources/imagenes/edificio_ejemplo/piso2.bmp",
+      "salas": [
+        {
+          "nombre": "Recepcion",
+          "entradas": [
+            {"x": 18, "y": 17}
+          ]
+        }
+      ],
+      "puntosAcceso": [
+        {
+          "tipo": "ASCENSOR",
+          "id": "ascensor_1",
+          "x": 34,
+          "y": 7,
+          "conectadoId": "ascensor_2"
+        },
+        {
+          "tipo": "ESCALERA",
+          "id": "escalera_1",
+          "x": 61,
+          "y": 48,
+          "conectadoId": "escalera_2"
+        }
+      ],
+      "salidas": [
+        {
+          "nombre": "Salida Principal",
+          "x": 27,
+          "y": 74,
+          "esPrincipal": true
+        }
+      ]
+    },
+    {
+      "numero": 2,
+      "nombre": "Primer Piso",
+      "imagen": "src/main/resources/imagenes/edificio_ejemplo/piso2.bmp",
+      "salas": [
+        {
+          "nombre": "r-201",
+          "entradas": [
+            {"x": 18, "y": 41}
+          ]
+        }
+      ],
+      "puntosAcceso": [
+        {
+          "tipo": "ASCENSOR",
+          "id": "ascensor_2",
+          "x": 34,
+          "y": 7,
+          "conectadoId": "ascensor_1"
+        },
+        {
+          "tipo": "ESCALERA",
+          "id": "escalera_2",
+          "x": 150,
+          "y": 200,
+          "conectadoId": "escalera_1"
+        }
+      ]
+    }
+  ]
+}

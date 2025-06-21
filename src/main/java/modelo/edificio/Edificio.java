@@ -1,11 +1,10 @@
 package modelo.edificio;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Edificio {
     private String nombre;
-    private List<Piso> pisos = new ArrayList<>();
+    private ArrayList<Piso> pisos = new ArrayList<>();
 
     public Edificio(String nombre) {
         this.nombre = nombre;
@@ -17,7 +16,7 @@ public class Edificio {
 
     // Getters
     public String getNombre() { return nombre; }
-    public List<Piso> getPisos() { return pisos; }
+    public ArrayList<Piso> getPisos() { return pisos; }
 
     public Piso getPiso(int numero) {
         return pisos.stream()

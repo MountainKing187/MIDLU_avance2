@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class Sala {
     private String nombre;
-    private ArrayList<Punto> entradas;
+    private ArrayList<Punto> entradas = new ArrayList<>();
 
     public Sala(String nombre) {
         this.nombre = nombre;
