@@ -5,6 +5,7 @@ public class Ascensor extends PuntoAcceso {
         super(ubicacion, piso);
     }
 
+
     @Override
     public boolean esAccesibleParaDiscapacitados() {
         return true;

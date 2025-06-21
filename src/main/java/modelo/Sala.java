@@ -6,9 +6,8 @@ public class Sala {
     private String nombre;
     private ArrayList<Punto> entradas;
 
-    public Sala(String nombre, ArrayList<Punto> entradas) {
+    public Sala(String nombre) {
         this.nombre = nombre;
-        this.entradas = entradas;
     }
 
     public void agregarEntrada(Punto entrada) {
