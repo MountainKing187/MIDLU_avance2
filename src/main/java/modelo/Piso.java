@@ -1,39 +1,42 @@
 package modelo;
 
-import modelo.Ascensor;
-import modelo.Escalera;
-
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class Piso {
-    private final BufferedImage imagenMapa;
     private int numero;
-    private String imagenPath;
-    private ArrayList<Sala> salas;
-    private ArrayList<Escalera> escaleras;
-    private ArrayList<Ascensor> ascensores;
-    private ArrayList<Salida> salidas;
-    private boolean[][] obstaculos; // matriz de navegabilidad
+    private String nombre;
+    private boolean[][] obstaculos;
+    private BufferedImage imagenMapa;
+
+    private ArrayList<Sala> salas = new ArrayList<>();
+    private ArrayList<PuntoAcceso> puntosAcceso = new ArrayList<>();
+    private ArrayList<Salida> salidas = new ArrayList<>();
 
     public Piso(int numero, String nombre, MapaProcesado mapa) {
         this.numero = numero;
+        this.nombre = nombre;
         this.obstaculos = mapa.getObstaculos();
         this.imagenMapa = mapa.getImagenOriginal();
-        this.salas = new ArrayList<>();
-        this.escaleras = new ArrayList<>();
-        this.ascensores = new ArrayList<>();
-        this.salidas = new ArrayList<>();
     }
 
-    // Métodos para manejar entidades
-    public void agregarSala(Sala sala) { /* ... */ }
-    public void agregarPuntoAcceso(PuntoAcceso punto) { /* ... */ }
+    // Métodos para agregar entidades
+    public void agregarSala(Sala sala) { salas.add(sala); }
+    public void agregarPuntoAcceso(PuntoAcceso punto) { puntosAcceso.add(punto); }
+    public void agregarSalida(Salida salida) { salidas.add(salida); }
 
-    // Getter para pathfinding
+    // Getters
+    public int getNumero() { return numero; }
+    public String getNombre() { return nombre; }
+    public boolean[][] getMapaObstaculos() { return obstaculos; }
+    public ArrayList<Sala> getSalas() { return salas; }
+    public ArrayList<PuntoAcceso> getPuntosAcceso() { return puntosAcceso; }
+    public ArrayList<Salida> getSalidas() { return salidas; }
+
     public boolean esTransitable(int x, int y) {
+        if (x < 0 || y < 0 || x >= obstaculos.length || y >= obstaculos[0].length) {
+            return false;
+        }
         return !obstaculos[x][y];
     }
-
-    public boolean[][] getMapaObstaculos() { return obstaculos; }
 }
