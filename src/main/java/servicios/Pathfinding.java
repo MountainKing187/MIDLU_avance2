@@ -9,7 +9,7 @@ public class Pathfinding {
     private static final int[][] DIRECCIONES = {{0, 1}, {1, 0}, {0, -1}, {-1, 0},  // Movimientos cardinales
             {1, 1}, {1, -1}, {-1, 1}, {-1, -1}}; // Movimientos diagonales
 
-    public static Ruta encontrarRuta(Punto inicio, Punto fin, boolean evitarEscaleras) {
+    public static Ruta encontrarRuta(Punto inicio, Punto fin) {
         return encontrarRutaMismoPiso(inicio, fin);
     }
 

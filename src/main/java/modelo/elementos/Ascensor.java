@@ -9,11 +9,13 @@ public class Ascensor extends PuntoAcceso {
         super(ubicacion, piso);
     }
 
-
     @Override
     public boolean esAccesibleParaDiscapacitados() {
         return true;
     }
+
+    @Override
+    public String getTipo() { return "ASCENSOR";}
 
     // Métodos específicos de ascensor si los hay
 }

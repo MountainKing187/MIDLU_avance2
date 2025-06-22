@@ -28,4 +28,7 @@ public abstract class PuntoAcceso {
     // Getters y setters
     public Piso getPiso() { return pisoActual; }
     public Punto getUbicacion() { return ubicacion; }
+
+    public String getTipo() {return "PUNTOACCESO";
+    }
 }

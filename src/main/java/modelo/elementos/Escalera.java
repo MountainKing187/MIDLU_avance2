@@ -14,5 +14,9 @@ public class Escalera extends PuntoAcceso {
         return false;
     }
 
+    @Override
+    public String getTipo() { return "ESCALERA";}
+
+
     // Métodos específicos de escalera si los hay
 }
