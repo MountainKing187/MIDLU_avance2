@@ -40,7 +40,10 @@ public class launch {
         for (int i = 0; i < obstaculos.length; i++) {
             for (int j = 0; j < obstaculos[i].length; j++) {
                 for (Punto punto : ruta.getPuntos()){
-                    if (punto.getX() == j && punto.getY() == i) dibuja = true;
+                    if (punto.getX() == j && punto.getY() == i) {
+                        dibuja = true;
+                        break;
+                    }
                 }
                 if (dibuja) System.out.print("x ");
                 else if (obstaculos[i][j]) System.out.print("■ ");
