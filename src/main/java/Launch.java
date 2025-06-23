@@ -12,7 +12,7 @@ public class Launch {
             PanelPrincipal ventana = new PanelPrincipal();
 
             // 3. Crear el controlador con los datos cargados
-            ControladorPanel controlador = new ControladorPanel(cargador, ventana);
+            ControladorPanel controlador = new ControladorPanel(ventana);
 
             // 4. Conectar la ventana al controlador
             ventana.setControlador(controlador);

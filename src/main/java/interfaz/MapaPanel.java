@@ -17,6 +17,9 @@ public class MapaPanel extends JPanel {
     private Ruta ruta;
     private int cellSize;
 
+    private int offsetX;
+    private int offsetY;
+
     public MapaPanel(Piso piso, Ruta ruta, ControladorPanel controlador) {
         this.piso = piso;
         this.ruta = ruta;
@@ -24,13 +27,15 @@ public class MapaPanel extends JPanel {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                int x = e.getX() / cellSize;
-                int y = e.getY() / cellSize;
-                if (piso != null) {
+                int x = (e.getX() - offsetX) / cellSize;
+                int y = (e.getY() - offsetY) / cellSize;
+
+                if (x >= 0 && y >= 0 && piso != null) {
                     controlador.manejarClicEnMapa(x, y, piso);
                 }
             }
         });
+
     }
 
 
@@ -56,10 +61,10 @@ public class MapaPanel extends JPanel {
             for (int x = 0; x < obstaculos[y].length; x++) {
                 if (obstaculos[y][x]) {
                     g.setColor(Color.BLACK);
-                    g.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+                    g.fillRect(x * cellSize + offsetX, y * cellSize + offsetY, cellSize, cellSize);
                 } else {
                     g.setColor(Color.LIGHT_GRAY);
-                    g.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+                    g.fillRect(x * cellSize + offsetX, y * cellSize + offsetY, cellSize, cellSize);
                 }
             }
         }
@@ -67,24 +72,30 @@ public class MapaPanel extends JPanel {
         g.setColor(Color.RED);
         for (Punto p : puntosRuta) {
             if (p.getPiso().equals(piso)) {
-                g.fillOval(p.getX() * cellSize, p.getY() * cellSize, cellSize, cellSize);
+                g.fillOval(p.getX() * cellSize + offsetX, p.getY() * cellSize + offsetY, cellSize, cellSize);
             }
         }
     }
 
     private void calcularCellSize() {
         if (piso == null || piso.getMapaObstaculos() == null) {
-            cellSize = 10; // default
+            cellSize = 10;
+            offsetX = 0;
+            offsetY = 0;
             return;
         }
         int cols = piso.getMapaObstaculos()[0].length;
         int rows = piso.getMapaObstaculos().length;
 
         int MAX_WIDTH = 800;
+        int MAX_HEIGHT = 640; // deja 80px para los botones abajo
+
         int sizeX = MAX_WIDTH / cols;
-        int MAX_HEIGHT = 700;
         int sizeY = MAX_HEIGHT / rows;
 
         cellSize = Math.min(sizeX, sizeY);
+        offsetX = (MAX_WIDTH - (cols * cellSize)) / 2;
+        offsetY = (MAX_HEIGHT - (rows * cellSize)) / 2;
     }
+
 }

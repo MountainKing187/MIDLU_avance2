@@ -1,7 +1,6 @@
 package interfaz;
 
 import modelo.edificio.Piso;
-import modelo.elementos.Sala;
 import modelo.navegacion.Ruta;
 import servicios.ControladorPanel;
 
@@ -121,8 +120,7 @@ public class PanelPrincipal extends JFrame {
     }
 
 
-    // Dentro de PanelPrincipal
-
+//  Inicializacion Mapa, va después que carga MapaPanel
     public void iniciarMapa(Piso pisoInicial, Ruta ruta, ControladorPanel controlador) {
         getContentPane().removeAll();
         setLayout(new BorderLayout());
@@ -182,7 +180,7 @@ public class PanelPrincipal extends JFrame {
                 actualizarIcono(btnSubir, "iconos/pluspng.png", true);
             }
         } catch (IOException e) {
-            System.err.println("❌ Error actualizando botones de piso");
+            System.err.println("Error actualizando botones de piso");
         }
     }
 
