@@ -1,0 +1,91 @@
+@startuml
+title MIDLU
+left to right direction
+package "modelo"{
+package "navegacion" {
+class Punto {
+    - x : int
+    - y : int
+    - piso : Piso
+
+    + getX() : int
+    + getY() : int
+    + getPiso() : Piso
+
+    + setX(x : int) : void
+    + setY(y : int) : void
+
+    + distanciaA(otro : Punto) : double
+}
+
+class Ruta {
+    - puntos : ArrayList<Punto>
+    - distanciaTotal : double
+
+    + agregarPunto(punto : Punto) : void
+    + getPuntos() : ArrayList<Punto>
+    + getDistanciaTotal() : double
+    + getPuntoInicio() : Punto
+    + getPuntoFin() : Punto
+}
+}
+package Edificio {
+    class Edificio{
+        -nombre : String
+        -pisos : ArrayList<Piso>
+
+        +getPiso(numero : int) : Piso
+        +getPisos() : ArrayList<Piso>
+        +getNombre() : String
+
+        +agregarPiso(piso : Piso) : void
+        }
+    class MapaProcesado{
+        - obstaculos : boolean[ ][ ]
+        - imageOriginal : BufferedImage
+
+        + getObstaculos() : boolean[ ][ ]
+        + getImagenOriginal() : BufferedImage
+        }
+    class Piso {
+    - numero : int
+    - nombre : String
+    - obstaculos : boolean[ ][ ]
+    - imagenMapa : BufferedImage
+
+    - salas : ArrayList<Sala>
+    - puntosAccesos : ArrayList<PuntoAcceso>
+    - salidas : ArrayList<Salida>
+
+    + agregarSala(sala : Sala) : void
+    + agregarPuntoAcceso(punto : PuntoAcceso) : void
+    + agregarSalida(salida : Salida) : void
+
+
+
+    }
+}
+
+class Usuario {
+    - ubicacion : Punto
+    - tieneDiscapacidad : boolean
+
+    + getUbicacion() : Punto
+    + tieneDiscapacidad : boolean
+}
+
+abstract class PuntoAcceso{
+    # ubicacion : Punto
+    # pisoActual : Piso
+    # puntoConectado : PuntoAcceso
+
+    + getPiso() : Piso
+    + getUbicacion() : Punto
+    + getTipo() : String
+    + getPuntoConectado() : PuntoAcceso
+    + {abstract} esAccesibleParaDiscapacitados() : boolean
+
+    + conectarCon(otroPunto : PuntoAcceso) : void
+}
+}
+@enduml
