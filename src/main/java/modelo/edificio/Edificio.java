@@ -17,7 +17,6 @@ public class Edificio {
     // Getters
     public String getNombre() { return nombre; }
     public ArrayList<Piso> getPisos() { return pisos; }
-    public int numeroDePisos() {return pisos.size();}
 
     public Piso getPiso(int numero) {
         return pisos.stream()

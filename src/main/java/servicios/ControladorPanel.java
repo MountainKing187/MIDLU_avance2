@@ -8,8 +8,6 @@ import modelo.navegacion.Punto;
 import modelo.navegacion.Ruta;
 import persistencia.CargadorEdificios;
 
-import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
 
 public class ControladorPanel {
@@ -37,13 +35,8 @@ public class ControladorPanel {
         ArrayList<Ruta> rutas = navegador.calcularRutaCompleta(origen, destino, false);
         Ruta ruta = rutas.isEmpty() ? new Ruta() : rutas.get(0);
 
-        MapaPanel mapaPanel = new MapaPanel(pisoInicial, ruta, this);
-
-        ventana.getContentPane().removeAll(); // Eliminar botones anteriores
-        ventana.setLayout(new BorderLayout());
-        ventana.add(mapaPanel, BorderLayout.CENTER);
-        ventana.revalidate();
-        ventana.repaint();
+        ventana.iniciarMapa(pisoInicial, ruta, this);
+        ventana.actualizarBotonesPiso(pisoActual, edificio.getPisos().size());
     }
 
     public void manejarClicEnMapa(int x, int y, Piso piso) {
@@ -62,5 +55,24 @@ public class ControladorPanel {
         if (numeroPiso == 1) return new Punto(10, 10, edificio.getPiso(1));
         if (numeroPiso == 2) return new Punto(5, 5, edificio.getPiso(2));
         return new Punto(0, 0, edificio.getPiso(1)); // fallback
+    }
+
+    public void cambiarPiso(int delta) {
+        int nuevoPiso = pisoActual + delta;
+        if (nuevoPiso < 1 || nuevoPiso > edificio.getPisos().size()) {
+            System.out.println("⚠️ Piso fuera de rango.");
+            return;
+        }
+
+        pisoActual = nuevoPiso;
+
+        Piso piso = edificio.getPiso(pisoActual);
+        Punto destino = getDestinoDePiso(pisoActual);
+        Punto origen = new Punto(destino.getX(), destino.getY(), piso);
+        ArrayList<Ruta> rutas = navegador.calcularRutaCompleta(origen, destino, false);
+        Ruta ruta = rutas.isEmpty() ? new Ruta() : rutas.get(0);
+
+        ventana.iniciarMapa(piso, ruta, this); // 🔁 Reutilizamos iniciarMapa de PanelPrincipal
+        ventana.actualizarBotonesPiso(pisoActual, edificio.getPisos().size());
     }
 }

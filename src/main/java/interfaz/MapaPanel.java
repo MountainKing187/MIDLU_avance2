@@ -15,7 +15,7 @@ public class MapaPanel extends JPanel {
 
     private Piso piso;
     private Ruta ruta;
-    private final int cellSize = 10;
+    private int cellSize;
 
     public MapaPanel(Piso piso, Ruta ruta, ControladorPanel controlador) {
         this.piso = piso;
@@ -40,16 +40,14 @@ public class MapaPanel extends JPanel {
         repaint();
     }
 
-    @Override
-    public Dimension getPreferredSize() {
-        return new Dimension(800, 600); // por defecto
-    }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
         if (piso == null || ruta == null) return;
+
+        calcularCellSize();
 
         boolean[][] obstaculos = piso.getMapaObstaculos();
         List<Punto> puntosRuta = ruta.getPuntos();
@@ -74,5 +72,19 @@ public class MapaPanel extends JPanel {
         }
     }
 
+    private void calcularCellSize() {
+        if (piso == null || piso.getMapaObstaculos() == null) {
+            cellSize = 10; // default
+            return;
+        }
+        int cols = piso.getMapaObstaculos()[0].length;
+        int rows = piso.getMapaObstaculos().length;
 
+        int MAX_WIDTH = 800;
+        int sizeX = MAX_WIDTH / cols;
+        int MAX_HEIGHT = 700;
+        int sizeY = MAX_HEIGHT / rows;
+
+        cellSize = Math.min(sizeX, sizeY);
+    }
 }

@@ -1,17 +1,23 @@
 package interfaz;
 
+import modelo.edificio.Piso;
+import modelo.navegacion.Ruta;
 import servicios.ControladorPanel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
 
 public class PanelPrincipal extends JFrame {
 
     private ControladorPanel controlador;
+
+    private JButton btnSubir;
+    private JButton btnBajar;
 
     public PanelPrincipal() {
         setTitle("Menú Principal");
@@ -40,7 +46,12 @@ public class PanelPrincipal extends JFrame {
         JButton btnIniciar = crearBotonConHover("Iniciar Mapa", iconoNormal, iconoHover);
         JButton btnSalir = crearBotonConHover("Cerrar Programa", iconoNormal, iconoHover);
 
-        btnIniciar.addActionListener(e -> controlador.iniciarMapa());
+        btnIniciar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controlador.iniciarMapa();
+            }
+        });
         btnSalir.addActionListener(e -> System.exit(0));
 
         gbc.gridy = 0;
@@ -85,6 +96,7 @@ public class PanelPrincipal extends JFrame {
     private ImageIcon cargarIcono(String path) {
         try {
             InputStream is = getClass().getClassLoader().getResourceAsStream(path);
+            assert is != null;
             Image img = ImageIO.read(is);
             return new ImageIcon(img.getScaledInstance(192, 64, Image.SCALE_SMOOTH));
         } catch (IOException | NullPointerException e) {
@@ -92,4 +104,82 @@ public class PanelPrincipal extends JFrame {
             return null;
         }
     }
+
+
+    // Dentro de PanelPrincipal
+
+    public void iniciarMapa(Piso pisoInicial, Ruta ruta, ControladorPanel controlador) {
+        getContentPane().removeAll();
+        setLayout(new BorderLayout());
+
+        // Panel del mapa
+        MapaPanel mapaPanel = new MapaPanel(pisoInicial, ruta, controlador);
+        add(mapaPanel, BorderLayout.CENTER);
+
+        // Panel inferior con botones
+        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        panelBotones.setBackground(Color.DARK_GRAY);
+
+        btnBajar = crearBotonPiso("iconos/minuspng.png", e -> controlador.cambiarPiso(-1));
+        btnSubir = crearBotonPiso("iconos/pluspng.png", e -> controlador.cambiarPiso(+1));
+
+        panelBotones.add(btnBajar);
+        panelBotones.add(btnSubir);
+        add(panelBotones, BorderLayout.SOUTH);
+
+        setVisible(true);
+    }
+
+    private JButton crearBotonPiso(String pathIcono, java.awt.event.ActionListener action) {
+        JButton boton = new JButton();
+        try {
+            InputStream is = getClass().getClassLoader().getResourceAsStream(pathIcono);
+            if (is != null) {
+                Image img = ImageIO.read(is);
+                boton.setIcon(new ImageIcon(img.getScaledInstance(32, 32, Image.SCALE_SMOOTH)));
+            } else {
+                boton.setText("?");
+            }
+        } catch (IOException e) {
+            boton.setText("?");
+        }
+        boton.setPreferredSize(new Dimension(40, 40));
+        boton.setBorderPainted(false);
+        boton.setFocusPainted(false);
+        boton.setContentAreaFilled(false);
+        boton.addActionListener(action);
+        return boton;
+    }
+
+    public void actualizarBotonesPiso(int pisoActual, int totalPisos) {
+        try {
+            // Botón bajar
+            if (pisoActual == 0) {
+                actualizarIcono(btnBajar, "iconos/minusgrey.png", false);
+            } else {
+                actualizarIcono(btnBajar, "iconos/minuspng.png", true);
+            }
+
+            // Botón subir
+            if (pisoActual >= totalPisos) {
+                actualizarIcono(btnSubir, "iconos/plusgrey.png", false);
+            } else {
+                actualizarIcono(btnSubir, "iconos/pluspng.png", true);
+            }
+        } catch (IOException e) {
+            System.err.println("❌ Error actualizando botones de piso");
+        }
+    }
+
+    private void actualizarIcono(JButton boton, String ruta, boolean habilitado) throws IOException {
+        InputStream is = getClass().getClassLoader().getResourceAsStream(ruta);
+        if (is != null) {
+            Image img = ImageIO.read(is);
+            boton.setIcon(new ImageIcon(img.getScaledInstance(32, 32, Image.SCALE_SMOOTH)));
+        } else {
+            boton.setText("?");
+        }
+        boton.setEnabled(habilitado);
+    }
+
 }
