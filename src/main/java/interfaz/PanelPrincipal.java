@@ -1,14 +1,14 @@
 package interfaz;
 
 import modelo.edificio.Piso;
+import modelo.elementos.Sala;
 import modelo.navegacion.Ruta;
 import servicios.ControladorPanel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.util.List;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -46,9 +46,24 @@ public class PanelPrincipal extends JFrame {
         JButton btnIniciar = crearBotonConHover("Iniciar Mapa", iconoNormal, iconoHover);
         JButton btnSalir = crearBotonConHover("Cerrar Programa", iconoNormal, iconoHover);
 
-        btnIniciar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        btnIniciar.addActionListener(e -> {
+            List<String> salas = controlador.getTodasLasSalas();
+            if (salas.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No hay salas disponibles en el edificio.");
+                return;
+            }
+
+            JComboBox<String> comboSalas = new JComboBox<>(salas.toArray(new String[0]));
+            int opcion = JOptionPane.showConfirmDialog(
+                    this,
+                    comboSalas,
+                    "Selecciona la sala destino",
+                    JOptionPane.OK_CANCEL_OPTION
+            );
+
+            if (opcion == JOptionPane.OK_OPTION) {
+                String salaSeleccionada = (String)comboSalas.getSelectedItem();
+                controlador.setSalaDestino(salaSeleccionada);
                 controlador.iniciarMapa();
             }
         });
@@ -154,7 +169,7 @@ public class PanelPrincipal extends JFrame {
     public void actualizarBotonesPiso(int pisoActual, int totalPisos) {
         try {
             // Botón bajar
-            if (pisoActual == 0) {
+            if (pisoActual == 1) {
                 actualizarIcono(btnBajar, "iconos/minusgrey.png", false);
             } else {
                 actualizarIcono(btnBajar, "iconos/minuspng.png", true);
