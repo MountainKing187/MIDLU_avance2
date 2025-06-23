@@ -1,8 +1,8 @@
 @startuml
 title MIDLU
 left to right direction
-package "modelo"{
-package "navegacion" {
+package modelo{
+package navegacion {
 class Punto {
     - x : int
     - y : int
@@ -30,41 +30,82 @@ class Ruta {
 }
 }
 package Edificio {
-    class Edificio{
-        -nombre : String
-        -pisos : ArrayList<Piso>
+class Edificio{
+    -nombre : String
+    -pisos : ArrayList<Piso>
 
-        +getPiso(numero : int) : Piso
-        +getPisos() : ArrayList<Piso>
-        +getNombre() : String
+    +getPiso(numero : int) : Piso
+    +getPisos() : ArrayList<Piso>
+    +getNombre() : String
 
-        +agregarPiso(piso : Piso) : void
-        }
-    class MapaProcesado{
-        - obstaculos : boolean[ ][ ]
-        - imageOriginal : BufferedImage
+    +agregarPiso(piso : Piso) : void
+    }
+class MapaProcesado{
+    - obstaculos : boolean[ ][ ]
+    - imageOriginal : BufferedImage
 
-        + getObstaculos() : boolean[ ][ ]
-        + getImagenOriginal() : BufferedImage
-        }
-    class Piso {
+    + getObstaculos() : boolean[ ][ ]
+    + getImagenOriginal() : BufferedImage
+    }
+class Piso {
     - numero : int
     - nombre : String
-    - obstaculos : boolean[ ][ ]
+    - obstaculos : boolean[][]
     - imagenMapa : BufferedImage
-
     - salas : ArrayList<Sala>
-    - puntosAccesos : ArrayList<PuntoAcceso>
+    - puntosAcceso : ArrayList<PuntoAcceso>
     - salidas : ArrayList<Salida>
 
-    + agregarSala(sala : Sala) : void
-    + agregarPuntoAcceso(punto : PuntoAcceso) : void
-    + agregarSalida(salida : Salida) : void
+    + agregarSala(sala: Sala) : void
+    + agregarPuntoAcceso(punto: PuntoAcceso) : void
+    + agregarSalida(salida: Salida) : void
 
-
-
-    }
+    + getNumero() : int
+    + getNombre() : String
+    + getMapaObstaculos() : boolean[][]
+    + getSalas() : ArrayList<Sala>
+    + getPuntosAcceso() : ArrayList<PuntoAcceso>
+    + getSalidas() : ArrayList<Salida>
+    + esTransitable(x: int, y: int) : boolean
 }
+}
+package elementos{
+class Ascensor extends modelo.PuntoAcceso {
+    + Ascensor(ubicacion: Punto, piso: Piso)
+
+    + esAccesibleParaDiscapacitados() : boolean
+    + getTipo() : String
+}
+class Escalera extends modelo.PuntoAcceso{
+    + Escalera(ubicacion: Punto, piso: Piso)
+
+    + esAccesibleParaDiscapacitados() : boolean
+    + getTipo() : String
+}
+class Sala {
+    - nombre : String
+    - entradas : ArrayList<Punto>
+
+    + Sala(nombre: String)
+    + agregarEntrada(entrada: Punto) : void
+    + getNombre() : String
+    + getEntradas() : ArrayList<Punto>
+}
+class Salida {
+    - nombre : String
+    - ubicacion : Punto
+    - esPrincipal : boolean
+
+    + Salida(nombre: String, ubicacion: Punto, esPrincipal: boolean)
+
+    + getNombre() : String
+    + getUbicacion() : Punto
+    + getX() : int
+    + getY() : int
+    + isEsPrincipal() : boolean
+}
+}
+
 
 class Usuario {
     - ubicacion : Punto
@@ -88,4 +129,5 @@ abstract class PuntoAcceso{
     + conectarCon(otroPunto : PuntoAcceso) : void
 }
 }
+Salida "1" *-- "1" Punto : contiene
 @enduml
