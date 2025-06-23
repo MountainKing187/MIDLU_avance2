@@ -53,19 +53,29 @@ public class PanelPrincipal extends JFrame {
             }
 
             JComboBox<String> comboSalas = new JComboBox<>(salas.toArray(new String[0]));
+            JCheckBox chkAscensor = new JCheckBox("Necesito ascensor");
+
+            JPanel panel = new JPanel(new GridLayout(2, 1));
+            panel.add(new JLabel("Selecciona la sala destino:"));
+            panel.add(comboSalas);
+            panel.add(chkAscensor);
+
             int opcion = JOptionPane.showConfirmDialog(
                     this,
-                    comboSalas,
-                    "Selecciona la sala destino",
+                    panel,
+                    "Configuración de ruta",
                     JOptionPane.OK_CANCEL_OPTION
             );
 
             if (opcion == JOptionPane.OK_OPTION) {
-                String salaSeleccionada = (String)comboSalas.getSelectedItem();
+                String salaSeleccionada = (String) comboSalas.getSelectedItem();
+                boolean necesitaAscensor = chkAscensor.isSelected();
+
                 controlador.setSalaDestino(salaSeleccionada);
-                controlador.iniciarMapa();
+                controlador.iniciarMapa(necesitaAscensor);
             }
         });
+
         btnSalir.addActionListener(e -> System.exit(0));
 
         gbc.gridy = 0;

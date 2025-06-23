@@ -35,23 +35,24 @@ public class ControladorPanel {
         this.pisoActual = 1;
     }
 
-    public void iniciarMapa() {
+    public void iniciarMapa(boolean necesitaAscensor) {
         Piso pisoInicial = edificio.getPiso(pisoActual);
-
-        Ruta ruta = new Ruta(); // vacía por defecto
+        Ruta ruta = new Ruta(); // Ruta vacía por defecto
 
         if (salaDestino != null) {
-            Punto destino = salaDestino.getEntradas().get(0);
-            Punto origen = destino; // por ahora
+            Punto destino = salaDestino.getEntradas().getFirst();
+            Punto origen = destino; // este valor se utilizaria si se agrega gps al sistema
+
             puntoOrigenUsuario = origen;
 
-            rutaCompleta = navegador.calcularRutaCompleta(origen, destino, false);
-            ruta = obtenerTramoParaPisoActual();
+            ArrayList<Ruta> rutas = navegador.calcularRutaCompleta(origen, destino, necesitaAscensor);
+            ruta = rutas.isEmpty() ? new Ruta() : rutas.getFirst();
         }
 
         ventana.iniciarMapa(pisoInicial, ruta, this);
         ventana.actualizarBotonesPiso(pisoActual, edificio.getPisos().size());
     }
+
 
     public void manejarClicEnMapa(int x, int y, Piso piso) {
         puntoOrigenUsuario = new Punto(x, y, piso);
@@ -108,7 +109,7 @@ public class ControladorPanel {
     private Ruta obtenerTramoParaPisoActual() {
         Ruta tramo = new Ruta();
         for (Ruta r : rutaCompleta) {
-            if (!r.getPuntos().isEmpty() && r.getPuntos().get(0).getPiso().getNumero() == pisoActual) {
+            if (!r.getPuntos().isEmpty() && r.getPuntos().getFirst().getPiso().getNumero() == pisoActual) {
                 return r;
             }
         }
