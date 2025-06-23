@@ -7,6 +7,7 @@ import modelo.navegacion.Punto;
 import modelo.PuntoAcceso;
 import modelo.navegacion.Ruta;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class Navegador {
@@ -20,15 +21,15 @@ public class Navegador {
 
     /**
      * Calcula la ruta más corta entre dos puntos, que pueden estar en diferentes pisos.
-     * Si los puntos están en el mismo piso, devuelve una lista con una única ruta.
-     * Si están en pisos diferentes, devuelve una lista de rutas segmentadas
+     * Si los puntos están en el mismo piso, devuelve una ArrayLista con una única ruta.
+     * Si están en pisos diferentes, devuelve una ArrayLista de rutas segmentadas
      * (ruta en piso origen -> acceso -> ruta en piso intermedio -> ... -> acceso -> ruta en piso destino).
      *
      * @param inicio El punto de inicio de la navegación.
      * @param destino El punto de destino de la navegación.
      * @param evitarEscaleras Indica si se deben evitar las escaleras (true) o si se pueden usar (false).
      * @return Un ArrayList de objetos Ruta que representan la secuencia de rutas a seguir.
-     * Devuelve una lista vacía si no se encuentra una ruta.
+     * Devuelve una ArrayLista vacía si no se encuentra una ruta.
      */
     public ArrayList<Ruta> calcularRutaCompleta(Punto inicio, Punto destino, boolean evitarEscaleras) {
         ArrayList<Ruta> rutasSegmentadas = new ArrayList<>();
@@ -45,7 +46,7 @@ public class Navegador {
         // Caso 2: Inicio y destino en diferentes pisos
         // Buscar todas las secuencias posibles de PuntosAcceso que conectan los pisos.
         // Se establece una profundidad máxima para evitar búsquedas infinitas en edificios complejos.
-        List<List<PuntoAcceso>> todasSecuencias = encontrarTodasSecuenciasPuntosAcceso(
+        ArrayList<ArrayList<PuntoAcceso>> todasSecuencias = encontrarTodasSecuenciasPuntosAcceso(
                 inicio.getPiso(),
                 destino.getPiso(),
                 evitarEscaleras,
@@ -61,10 +62,10 @@ public class Navegador {
         }
 
         // 3. Evaluar la mejor secuencia basada en la distancia total
-        List<PuntoAcceso> mejorSecuencia = null;
+        ArrayList<PuntoAcceso> mejorSecuencia = null;
         double menorDistancia = Double.MAX_VALUE;
 
-        for (List<PuntoAcceso> secuencia : todasSecuencias) {
+        for (ArrayList<PuntoAcceso> secuencia : todasSecuencias) {
             double distancia = calcularDistanciaSecuencia(inicio, destino, secuencia);
             if (distancia < menorDistancia) {
                 menorDistancia = distancia;
@@ -91,7 +92,7 @@ public class Navegador {
      * @param salaDestino La Sala a la que se desea navegar.
      * @param evitarEscaleras Indica si se deben evitar las escaleras.
      * @return Un ArrayList de objetos Ruta que representan la secuencia de rutas a seguir.
-     * Devuelve una lista vacía si la sala no tiene entradas o no se encuentra una ruta.
+     * Devuelve una ArrayLista vacía si la sala no tiene entradas o no se encuentra una ruta.
      */
     public ArrayList<Ruta> navegarASala(Punto inicio, Sala salaDestino, boolean evitarEscaleras) {
         if (salaDestino == null || salaDestino.getEntradas().isEmpty()) {
@@ -128,10 +129,10 @@ public class Navegador {
      *
      * @param inicio El punto de inicio.
      * @param destino El punto de destino final.
-     * @param secuencia La lista de puntos de acceso que conectan los pisos.
+     * @param secuencia La ArrayLista de puntos de acceso que conectan los pisos.
      * @return La distancia total acumulada para esa secuencia.
      */
-    private double calcularDistanciaSecuencia(Punto inicio, Punto destino, List<PuntoAcceso> secuencia) {
+    private double calcularDistanciaSecuencia(Punto inicio, Punto destino, ArrayList<PuntoAcceso> secuencia) {
         double distanciaTotal = 0.0;
         Punto puntoOrigenSegmento = inicio;
 
@@ -168,14 +169,14 @@ public class Navegador {
 
     /**
      * Reimplementación de este método para corregir la generación de rutas entre pisos.
-     * Genera una lista de objetos Ruta que componen la ruta completa entre pisos.
+     * Genera una ArrayLista de objetos Ruta que componen la ruta completa entre pisos.
      *
      * @param inicio El punto de inicio.
      * @param destino El punto de destino final.
      * @param secuencia La mejor secuencia de puntos de acceso para la navegación.
      * @return Un ArrayList de objetos Ruta.
      */
-    private ArrayList<Ruta> generarRutasParaSecuencia(Punto inicio, Punto destino, List<PuntoAcceso> secuencia) {
+    private ArrayList<Ruta> generarRutasParaSecuencia(Punto inicio, Punto destino, ArrayList<PuntoAcceso> secuencia) {
         ArrayList<Ruta> rutasSegmentadas = new ArrayList<>();
         Punto puntoOrigenSegmento = inicio; // El punto de inicio del segmento de ruta actual
 
@@ -215,13 +216,13 @@ public class Navegador {
      * BFS para encontrar secuencias de puntos de acceso.
      * No necesita grandes cambios, solo el cálculo de maxProfundidad que se mueve al método público.
      */
-    private List<List<PuntoAcceso>> encontrarTodasSecuenciasPuntosAcceso(
+    private ArrayList<ArrayList<PuntoAcceso>> encontrarTodasSecuenciasPuntosAcceso(
             Piso pisoInicioBusqueda, // Renombrado para claridad
             Piso pisoDestinoBusqueda, // Renombrado para claridad
             boolean evitarEscaleras,
             int maxProfundidad) {
 
-        List<List<PuntoAcceso>> resultados = new ArrayList<>();
+        ArrayList<ArrayList<PuntoAcceso>> resultados = new ArrayList<>();
         Queue<NodoBusqueda> cola = new LinkedList<>();
 
         // Estado inicial: un nodo que representa el piso de inicio de la búsqueda, sin puntos de acceso aún en la secuencia
@@ -265,7 +266,7 @@ public class Navegador {
                 Set<Piso> nuevosVisitados = new HashSet<>(actual.visitados);
                 nuevosVisitados.add(actual.piso); // Añadir el piso actual a los visitados para la siguiente iteración
 
-                List<PuntoAcceso> nuevaSecuencia = new ArrayList<>(actual.secuencia);
+                ArrayList<PuntoAcceso> nuevaSecuencia = new ArrayList<>(actual.secuencia);
                 nuevaSecuencia.add(paEnPisoActual); // Añadir el punto de acceso que nos lleva al siguiente piso
 
                 cola.add(new NodoBusqueda(siguientePiso, nuevaSecuencia, nuevosVisitados));
@@ -277,10 +278,10 @@ public class Navegador {
 
     private static class NodoBusqueda {
         Piso piso; // El piso actual en el que nos encontramos en la búsqueda BFS
-        List<PuntoAcceso> secuencia; // La secuencia de PuntoAcceso que nos llevó a este piso
+        ArrayList<PuntoAcceso> secuencia; // La secuencia de PuntoAcceso que nos llevó a este piso
         Set<Piso> visitados; // Los pisos que ya hemos visitado en esta ruta de búsqueda para evitar ciclos
 
-        public NodoBusqueda(Piso piso, List<PuntoAcceso> secuencia, Set<Piso> visitados) {
+        public NodoBusqueda(Piso piso, ArrayList<PuntoAcceso> secuencia, Set<Piso> visitados) {
             this.piso = piso;
             this.secuencia = secuencia;
             this.visitados = visitados;

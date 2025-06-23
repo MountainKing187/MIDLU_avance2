@@ -1,10 +1,9 @@
 package modelo.navegacion;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Ruta {
-    private List<Punto> puntos;
+    private ArrayList<Punto> puntos;
     private double distanciaTotal;
 
     public Ruta() {
@@ -21,7 +20,7 @@ public class Ruta {
         puntos.add(punto);
     }
 
-    public List<Punto> getPuntos() {
+    public ArrayList<Punto> getPuntos() {
         return new ArrayList<>(puntos); // Devuelve copia para evitar modificaciones externas
     }
 
