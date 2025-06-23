@@ -1,45 +1,66 @@
 package servicios;
 
-import interfaz.PanelMapa;
+import interfaz.MapaPanel;
+import interfaz.PanelPrincipal;
 import modelo.edificio.Edificio;
 import modelo.edificio.Piso;
 import modelo.navegacion.Punto;
 import modelo.navegacion.Ruta;
+import persistencia.CargadorEdificios;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 
 public class ControladorPanel {
 
     private final Edificio edificio;
     private final Navegador navegador;
-    private PanelMapa panelActual;
+    private final PanelPrincipal ventana;
+    private int pisoActual;
 
-    // Punto objetivo fijo (ejemplo)
-    private final Punto destino;
-
-    public ControladorPanel(Edificio edificio) {
-        this.edificio = edificio;
-        this.navegador = new Navegador(edificio);
-        this.destino = new Punto(53, 12, edificio.getPiso(2)); // Cambia si quieres otro
-    }
-
-    public void iniciar() {
-        // Mostrar mapa inicial sin ruta, por ejemplo desde destino.getPiso()
-        panelActual = new PanelMapa(destino.getPiso(), new Ruta(), this);
-    }
-
-    public void manejarClicEnMapa(int x, int y, Piso pisoClic) {
-        Punto origen = new Punto(x, y, pisoClic);
-        System.out.println("🖱️ Punto seleccionado: (" + x + ", " + y + ")");
-
-        ArrayList<Ruta> rutas = navegador.calcularRutaCompleta(origen, destino, false);
-
-        if (!rutas.isEmpty()) {
-            System.out.println("✅ Ruta recalculada.");
-            // Actualizar panel con nueva ruta (en el piso del punto de clic)
-            panelActual.actualizarRuta(rutas.get(0), pisoClic);
-        } else {
-            System.out.println("❌ No se encontró una ruta desde este punto.");
+    public ControladorPanel(PanelPrincipal ventana) {
+        try {
+            this.edificio = CargadorEdificios.cargarDesdeJSON("src/main/resources/EdificiosJSON/EdificioEjemplo.json");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+        this.navegador = new Navegador(edificio);
+        this.ventana = ventana;
+        this.pisoActual = 1;
+    }
+
+    public void iniciarMapa() {
+        Piso pisoInicial = edificio.getPiso(pisoActual);
+        Punto destino = getDestinoDePiso(pisoActual);
+        Punto origen = new Punto(destino.getX(), destino.getY(), pisoInicial);
+        ArrayList<Ruta> rutas = navegador.calcularRutaCompleta(origen, destino, false);
+        Ruta ruta = rutas.isEmpty() ? new Ruta() : rutas.get(0);
+
+        MapaPanel mapaPanel = new MapaPanel(pisoInicial, ruta, this);
+
+        ventana.getContentPane().removeAll(); // Eliminar botones anteriores
+        ventana.setLayout(new BorderLayout());
+        ventana.add(mapaPanel, BorderLayout.CENTER);
+        ventana.revalidate();
+        ventana.repaint();
+    }
+
+    public void manejarClicEnMapa(int x, int y, Piso piso) {
+        Punto origen = new Punto(x, y, piso);
+        Punto destino = getDestinoDePiso(piso.getNumero());
+        ArrayList<Ruta> rutas = navegador.calcularRutaCompleta(origen, destino, false);
+        if (!rutas.isEmpty()) {
+            MapaPanel panel = (MapaPanel) ventana.getContentPane().getComponent(0); // Asume que solo hay uno
+            panel.actualizarDatos(piso, rutas.get(0));
+        } else {
+            System.out.println("❌ No se encontró ruta desde el punto seleccionado.");
+        }
+    }
+
+    private Punto getDestinoDePiso(int numeroPiso) {
+        if (numeroPiso == 1) return new Punto(10, 10, edificio.getPiso(1));
+        if (numeroPiso == 2) return new Punto(5, 5, edificio.getPiso(2));
+        return new Punto(0, 0, edificio.getPiso(1)); // fallback
     }
 }
