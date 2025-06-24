@@ -29,7 +29,7 @@ class Ruta {
     + getPuntoFin() : Punto
 }
 }
-package edificio {
+package Edificio {
 class Edificio{
     -nombre : String
     -pisos : ArrayList<Piso>
@@ -252,7 +252,7 @@ class PanelPrincipal extends JFrame{
 }
 }
 ' Core model relationships
-modelo.edificio.Edificio "1" *-- "1..*" Piso
+Edificio "1" *-- "1..*" Piso
 Piso "1" *-- "0..*" Sala
 Piso "1" *-- "0..*" PuntoAcceso
 Piso "1" *-- "0..*" Salida
@@ -266,7 +266,7 @@ PuntoAcceso <|-- Ascensor
 PuntoAcceso <|-- Escalera
 
 ' Navigation system
-Navegador --> modelo.edificio.Edificio
+Navegador --> Edificio
 Navegador --> Pathfinding
 Navegador --> Ruta
 Pathfinding --> Punto
@@ -274,7 +274,7 @@ Pathfinding --> Ruta
 Pathfinding --> Piso
 
 ' Persistence system
-CargadorEdificios --> modelo.edificio.Edificio
+CargadorEdificios --> Edificio
 CargadorEdificios --> Piso
 CargadorEdificios --> Sala
 CargadorEdificios --> Ascensor
@@ -286,12 +286,12 @@ ProcesadorMapa --> MapaProcesado
 
 ' Initialization
 CargadorInicial --> CargadorEdificios
-CargadorInicial --> modelo.edificio.Edificio
+CargadorInicial --> Edificio
 CargadorInicial --> Sala
 
 ' UI Controller
 ControladorPanel --> CargadorEdificios
-ControladorPanel --> modelo.edificio.Edificio
+ControladorPanel --> Edificio
 ControladorPanel --> Navegador
 ControladorPanel --> PanelPrincipal
 ControladorPanel --> Sala
