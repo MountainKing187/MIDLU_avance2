@@ -11,7 +11,6 @@ import java.util.ArrayList;
 public class CargadorInicial {
 
     private final Edificio edificio;
-    private final ArrayList<Sala> salas;
 
     public CargadorInicial(String rutaJSON) {
         Edificio edificioCargado = null;
@@ -31,7 +30,6 @@ public class CargadorInicial {
         }
 
         this.edificio = edificioCargado;
-        this.salas = extraerSalas(edificio);
     }
 
     private ArrayList<Sala> extraerSalas(Edificio edificio) {
@@ -55,5 +53,5 @@ public class CargadorInicial {
     public Edificio getEdificio() {
         return edificio;
     }
-    
+
 }
