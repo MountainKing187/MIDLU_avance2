@@ -89,6 +89,15 @@ public class PanelPrincipal extends JFrame {
         revalidate();
         repaint();
         setVisible(true);
+        if (!recursosCargadosCorrectamente) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "⚠️ Algunos archivos gráficos no se encontraron.\nPor favor, revisa la instalación.",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE
+            );
+        }
+
     }
 
     private JButton crearBotonConHover(String texto, ImageIcon iconoNormal, ImageIcon iconoHover) {
@@ -122,14 +131,20 @@ public class PanelPrincipal extends JFrame {
     private ImageIcon cargarIcono(String path) {
         try {
             InputStream is = getClass().getClassLoader().getResourceAsStream(path);
-            assert is != null;
+            if (is == null) {
+                System.err.println("❌ No se encontró el archivo: " + path);
+                recursosCargadosCorrectamente = false;
+                return null;
+            }
             Image img = ImageIO.read(is);
             return new ImageIcon(img.getScaledInstance(192, 64, Image.SCALE_SMOOTH));
-        } catch (IOException | NullPointerException e) {
-            System.err.println("❌ Error cargando ícono: " + path);
+        } catch (IOException e) {
+            System.err.println("❌ Error al cargar ícono: " + path);
+            recursosCargadosCorrectamente = false;
             return null;
         }
     }
+
 
 
 //  Inicializacion Mapa, va después que carga MapaPanel
@@ -192,9 +207,13 @@ public void iniciarMapa(Piso pisoInicial, Ruta ruta,
                 Image img = ImageIO.read(is);
                 boton.setIcon(new ImageIcon(img.getScaledInstance(32, 32, Image.SCALE_SMOOTH)));
             } else {
+                System.err.println("❌ Falta ícono: " + pathIcono);
+                recursosCargadosCorrectamente = false;
                 boton.setText("?");
             }
         } catch (IOException e) {
+            System.err.println("❌ Error cargando ícono: " + pathIcono);
+            recursosCargadosCorrectamente = false;
             boton.setText("?");
         }
         boton.setPreferredSize(new Dimension(40, 40));
@@ -204,6 +223,7 @@ public void iniciarMapa(Piso pisoInicial, Ruta ruta,
         boton.addActionListener(action);
         return boton;
     }
+
 
     public void actualizarBotonesPiso(int pisoActual, int totalPisos) {
         try {
