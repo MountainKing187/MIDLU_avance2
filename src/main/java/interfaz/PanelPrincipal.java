@@ -17,6 +17,7 @@ public class PanelPrincipal extends JFrame {
 
     private JButton btnSubir;
     private JButton btnBajar;
+    private boolean recursosCargadosCorrectamente = true;
 
     public PanelPrincipal() {
         setTitle("Menú Principal");
