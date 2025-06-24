@@ -7,9 +7,30 @@
       "imagen": "src/main/resources/imagenes/edificio_ejemplo/piso2.bmp",
       "salas": [
         {
+          "nombre": "Cocina",
+          "entradas": [
+            {
+              "x": 19,
+              "y": 17
+            }
+          ]
+        },
+        {
           "nombre": "Recepcion",
           "entradas": [
-            {"x": 18, "y": 17}
+            {
+              "x": 19,
+              "y": 31
+            }
+          ]
+        },
+        {
+          "nombre": "Comedor",
+          "entradas": [
+            {
+              "x": 19,
+              "y": 59
+            }
           ]
         }
       ],
@@ -44,9 +65,30 @@
       "imagen": "src/main/resources/imagenes/edificio_ejemplo/piso2.bmp",
       "salas": [
         {
-          "nombre": "r-201",
+          "nombre": "Sala V97",
           "entradas": [
-            {"x": 18, "y": 41}
+            {
+              "x": 19,
+              "y": 17
+            }
+          ]
+        },
+        {
+          "nombre": "Sala VL-202",
+          "entradas": [
+            {
+              "x": 19,
+              "y": 31
+            }
+          ]
+        },
+        {
+          "nombre": "Oficina Gabriel",
+          "entradas": [
+            {
+              "x": 19,
+              "y": 59
+            }
           ]
         }
       ],
