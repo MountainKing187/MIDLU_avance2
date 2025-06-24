@@ -65,20 +65,29 @@
       "imagen": "src/main/resources/imagenes/edificio_ejemplo/piso2.bmp",
       "salas": [
         {
-          "nombre": "Sala 101",
+          "nombre": "Sala V97",
           "entradas": [
             {
-              "x": 20,
-              "y": 20
+              "x": 21,
+              "y": 26
             }
           ]
         },
         {
-          "nombre": "Sala 102",
+          "nombre": "Sala VL-202",
           "entradas": [
             {
-              "x": 40,
-              "y": 50
+              "x": 42,
+              "y": 14
+            }
+          ]
+        },
+        {
+          "nombre": "Oficina Gabriel",
+          "entradas": [
+            {
+              "x": 21,
+              "y": 58
             }
           ]
         }
