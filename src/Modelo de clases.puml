@@ -1,0 +1,301 @@
+@startuml
+title MIDLU
+left to right direction
+package modelo{
+package navegacion {
+class Punto {
+    - x : int
+    - y : int
+    - piso : Piso
+
+    + getX() : int
+    + getY() : int
+    + getPiso() : Piso
+
+    + setX(x : int) : void
+    + setY(y : int) : void
+
+    + distanciaA(otro : Punto) : double
+}
+
+class Ruta {
+    - puntos : ArrayList<Punto>
+    - distanciaTotal : double
+
+    + agregarPunto(punto : Punto) : void
+    + getPuntos() : ArrayList<Punto>
+    + getDistanciaTotal() : double
+    + getPuntoInicio() : Punto
+    + getPuntoFin() : Punto
+}
+}
+package Edificio {
+class Edificio{
+    -nombre : String
+    -pisos : ArrayList<Piso>
+
+    +getPiso(numero : int) : Piso
+    +getPisos() : ArrayList<Piso>
+    +getNombre() : String
+
+    +agregarPiso(piso : Piso) : void
+    }
+class MapaProcesado{
+    - obstaculos : boolean[ ][ ]
+    - imageOriginal : BufferedImage
+
+    + getObstaculos() : boolean[ ][ ]
+    + getImagenOriginal() : BufferedImage
+    }
+class Piso {
+    - numero : int
+    - nombre : String
+    - obstaculos : boolean[][]
+    - imagenMapa : BufferedImage
+    - salas : ArrayList<Sala>
+    - puntosAcceso : ArrayList<PuntoAcceso>
+    - salidas : ArrayList<Salida>
+
+    + agregarSala(sala: Sala) : void
+    + agregarPuntoAcceso(punto: PuntoAcceso) : void
+    + agregarSalida(salida: Salida) : void
+
+    + getNumero() : int
+    + getNombre() : String
+    + getMapaObstaculos() : boolean[][]
+    + getSalas() : ArrayList<Sala>
+    + getPuntosAcceso() : ArrayList<PuntoAcceso>
+    + getSalidas() : ArrayList<Salida>
+    + esTransitable(x: int, y: int) : boolean
+}
+}
+package elementos{
+class Ascensor extends modelo.PuntoAcceso {
+    + Ascensor(ubicacion: Punto, piso: Piso)
+
+    + esAccesibleParaDiscapacitados() : boolean
+    + getTipo() : String
+}
+class Escalera extends modelo.PuntoAcceso{
+    + Escalera(ubicacion: Punto, piso: Piso)
+
+    + esAccesibleParaDiscapacitados() : boolean
+    + getTipo() : String
+}
+class Sala {
+    - nombre : String
+    - entradas : ArrayList<Punto>
+
+    + Sala(nombre: String)
+    + agregarEntrada(entrada: Punto) : void
+    + getNombre() : String
+    + getEntradas() : ArrayList<Punto>
+}
+class Salida {
+    - nombre : String
+    - ubicacion : Punto
+    - esPrincipal : boolean
+
+    + Salida(nombre: String, ubicacion: Punto, esPrincipal: boolean)
+
+    + getNombre() : String
+    + getUbicacion() : Punto
+    + getX() : int
+    + getY() : int
+    + isEsPrincipal() : boolean
+}
+}
+
+
+class Usuario {
+    - ubicacion : Punto
+    - tieneDiscapacidad : boolean
+
+    + getUbicacion() : Punto
+    + tieneDiscapacidad : boolean
+}
+
+abstract class PuntoAcceso{
+    # ubicacion : Punto
+    # pisoActual : Piso
+    # puntoConectado : PuntoAcceso
+
+    + getPiso() : Piso
+    + getUbicacion() : Punto
+    + getTipo() : String
+    + getPuntoConectado() : PuntoAcceso
+    + {abstract} esAccesibleParaDiscapacitados() : boolean
+
+    + conectarCon(otroPunto : PuntoAcceso) : void
+}
+}
+package persistencia{
+class CargadorEdificios {
+    + cargarDesdeJSON(rutaArchivo: String) : Edificio
+    - crearPisoDesdeJSON(jsonPiso: JSONObject) : Piso
+    - procesarSalas(jsonPiso: JSONObject, piso: Piso) : void
+    - procesarPuntosAcceso(jsonPiso: JSONObject, piso: Piso, mapaPuntosAcceso: Map<String,PuntoAcceso>) : void
+    - crearPuntoAccesoDesdeJSON(jsonPA: JSONObject, ubicacion: Punto) : PuntoAcceso
+    - procesarSalidas(jsonPiso: JSONObject, piso: Piso) : void
+    - crearPuntoDesdeJSON(jsonPunto: JSONObject, piso: Piso) : Punto
+    - establecerConexionesPuntosAcceso(jsonPisos: JSONArray, mapaPuntosAcceso: Map<String,PuntoAcceso>) : void
+    + cargarConfiguracion(edificio: Edificio, rutaArchivo: String) : void
+}
+}
+package servicios{
+class Navegador {
+    - edificio : Edificio
+    - pathfinding : Pathfinding
+
+    + Navegador(edificio: Edificio)
+    + calcularRutaCompleta(inicio: Punto, destino: Punto, evitarEscaleras: boolean) : ArrayList<Ruta>
+    + navegarASala(inicio: Punto, salaDestino: Sala, evitarEscaleras: boolean) : ArrayList<Ruta>
+    - calcularDistanciaSecuencia(inicio: Punto, destino: Punto, secuencia: ArrayList<PuntoAcceso>) : double
+    - generarRutasParaSecuencia(inicio: Punto, destino: Punto, secuencia: ArrayList<PuntoAcceso>) : ArrayList<Ruta>
+    - encontrarTodasSecuenciasPuntosAcceso(pisoInicioBusqueda: Piso, pisoDestinoBusqueda: Piso, evitarEscaleras: boolean, maxProfundidad: int) : ArrayList<ArrayList<PuntoAcceso>>
+}
+
+class NodoBusqueda {
+    - piso : Piso
+    - secuencia : ArrayList<PuntoAcceso>
+    - visitados : Set<Piso>
+    __
+    + NodoBusqueda(piso: Piso, secuencia: ArrayList<PuntoAcceso>, visitados: Set<Piso>)
+}
+class Pathfinding {
+    - DIRECCIONES : int[][] {static}
+    __
+    + encontrarRuta(inicio: Punto, fin: Punto) : Ruta {static}
+    - encontrarRutaMismoPiso(inicio: Punto, fin: Punto) : Ruta {static}
+    - heuristica(a: Punto, b: Punto) : double {static}
+    - reconstruirRuta(nodoFinal: Nodo) : Ruta {static}
+}
+
+class Nodo {
+    - punto : Punto
+    - padre : Nodo
+    - g : double
+    - f : double
+    __
+    + Nodo(punto: Punto, padre: Nodo, g: double, f: double)
+    + Nodo(punto: Punto)
+    + getPunto() : Punto
+    + getPadre() : Nodo
+    + getG() : double
+    + getF() : double
+    + setPadre(padre: Nodo) : void
+    + setG(g: double) : void
+    + setF(f: double) : void
+    + compareTo(otro: Nodo) : int
+    + equals(obj: Object) : boolean
+    + hashCode() : int
+}
+
+class ProcesadorMapa {
+    + procesarBitmap(rutaImagen: String) : MapaProcesado {static}
+    - esPared(colorRGB: int) : boolean {static}
+}
+
+class CargadorInicial {
+    - edificio : Edificio
+    - salas : ArrayList<Sala>
+    __
+    + CargadorInicial(rutaJSON: String)
+    + getEdificio() : Edificio
+    + getSalas() : ArrayList<Sala>
+    - extraerSalas(edificio: Edificio) : ArrayList<Sala>
+}
+class ControladorPanel {
+    - edificio : Edificio
+    - navegador : Navegador
+    - ventana : PanelPrincipal
+    - pisoActual : int
+    - salaDestino : Sala
+    - puntoOrigenUsuario : Punto
+    - rutaCompleta : ArrayList<Ruta>
+    __
+    + ControladorPanel(ventana: PanelPrincipal)
+    + iniciarMapa(necesitaAscensor: boolean) : void
+    + manejarClicEnMapa(x: int, y: int, piso: Piso) : void
+    + cambiarPiso(delta: int) : void
+    + setSalaDestino(nombreSala: String) : void
+    + getTodasLasSalas() : List<String>
+    - recalcularRuta() : void
+    - obtenerTramoParaPisoActual() : Ruta
+}
+}
+package interfaz{
+class MapaPanel extends JPanel{
+    -piso : Piso
+    -ruta : Ruta
+    -cellsize : int
+
+    -offsetX : int
+    -offsetY : int
+
+    +actualizarDatos(nuevoPiso : Piso, nuevaRuta : Ruta) : void
+    +calcularCellSize() : void
+}
+class PanelPrincipal extends JFrame{
+    -controlador : ControladorPanel
+    -btnSubir : JButton
+    -btnBajar : JButton
+
+    +setControlador(controlador ControladorPanel) : void
+    +mostrarMenu() : void
+    -crearBotoConHover(texto : String, iconoNormal : ImageIcon, iconoHover : ImageIcon) : JButton
+    -cargarIcono(path : String) : ImageIcon
+    +iniciarMapa(pisoInicial : Piso, ruta : Ruta, controlador : ControladorPanel) : void
+    -crearBotoConPiso(pathIcono : String, action : java.awt.event.ActionListener) : JButton
+    +actualizarBotonesPiso(pisoActual : int, totalPisos : int) : void
+    -  actualizarIcono(boton : JButton, ruta : String, habilitado : boolean)
+}
+}
+' Core model relationships
+Edificio "1" *-- "1..*" Piso
+Piso "1" *-- "0..*" Sala
+Piso "1" *-- "0..*" PuntoAcceso
+Piso "1" *-- "0..*" Salida
+Sala "1" *-- "0..*" Punto
+Salida "1" *-- "1" Punto
+PuntoAcceso "1" *-- "1" Punto
+Ruta "1" *-- "1..*" Punto
+
+' Inheritance
+PuntoAcceso <|-- Ascensor
+PuntoAcceso <|-- Escalera
+
+' Navigation system
+Navegador --> Edificio
+Navegador --> Pathfinding
+Navegador --> Ruta
+Pathfinding --> Punto
+Pathfinding --> Ruta
+Pathfinding --> Piso
+
+' Persistence system
+CargadorEdificios --> Edificio
+CargadorEdificios --> Piso
+CargadorEdificios --> Sala
+CargadorEdificios --> Ascensor
+CargadorEdificios --> Escalera
+CargadorEdificios --> Salida
+CargadorEdificios --> Punto
+CargadorEdificios --> ProcesadorMapa
+ProcesadorMapa --> MapaProcesado
+
+' Initialization
+CargadorInicial --> CargadorEdificios
+CargadorInicial --> Edificio
+CargadorInicial --> Sala
+
+' UI Controller
+ControladorPanel --> CargadorEdificios
+ControladorPanel --> Edificio
+ControladorPanel --> Navegador
+ControladorPanel --> PanelPrincipal
+ControladorPanel --> Sala
+ControladorPanel --> Punto
+ControladorPanel --> Ruta
+PanelPrincipal --> MapaPanel
+@enduml

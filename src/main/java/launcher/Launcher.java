@@ -1,8 +1,10 @@
+package launcher;
+
 import interfaz.PanelPrincipal;
 import servicios.CargadorInicial;
 import servicios.ControladorPanel;
 
-public class Launch {
+public class Launcher {
     public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(() -> {
             // 1. Cargar toda la información desde JSON
