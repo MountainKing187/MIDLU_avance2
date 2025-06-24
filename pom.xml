@@ -19,6 +19,11 @@
             <artifactId>json</artifactId>
             <version>20250517</version>
         </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>5.13.1</version>
+        </dependency>
     </dependencies>
 
 </project>
