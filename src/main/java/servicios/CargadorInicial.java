@@ -20,29 +20,15 @@ public class CargadorInicial {
             edificioCargado = CargadorEdificios.cargarDesdeJSON(rutaJSON);
         } catch (Exception e) {
             mostrarErrorYSalir(
-                    "Error en la instalación: revisa el mapa JSON.",
                     "Fallo al cargar JSON"
             );
         }
 
         if (edificioCargado == null) {
             mostrarErrorYSalir(
-                    "Error en la instalación: revisa el mapa JSON.",
                     "Fallo crítico en estructura"
             );
         }
-
-        // Verificar imágenes BMP de cada piso
-        for (Piso piso : edificioCargado.getPisos()) {
-            if (piso.getImagenMapa() == null) {
-                System.err.println("❌ Imagen del piso no cargada correctamente.");
-                mostrarErrorYSalir(
-                        "Error en la instalación: BMP no encontrado.",
-                        "Fallo en imagen del mapa"
-                );
-            }
-        }
-
 
         this.edificio = edificioCargado;
         this.salas = extraerSalas(edificio);
@@ -56,10 +42,10 @@ public class CargadorInicial {
         return lista;
     }
 
-    private void mostrarErrorYSalir(String mensaje, String titulo) {
+    private void mostrarErrorYSalir(String titulo) {
         JOptionPane.showMessageDialog(
                 null,
-                mensaje,
+                "Error en la instalación: mapa faltante.",
                 titulo,
                 JOptionPane.ERROR_MESSAGE
         );
@@ -69,8 +55,5 @@ public class CargadorInicial {
     public Edificio getEdificio() {
         return edificio;
     }
-
-    public ArrayList<Sala> getSalas() {
-        return salas;
-    }
+    
 }
