@@ -23,7 +23,7 @@ public class PanelPrincipal extends JFrame {
         setSize(800, 720);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setLayout(new GridBagLayout());  // Centra los botones
+          // Centra los botones
     }
 
     public void setControlador(ControladorPanel controlador) {
@@ -32,10 +32,11 @@ public class PanelPrincipal extends JFrame {
 
     public void mostrarMenu() {
         getContentPane().removeAll(); // Limpiar contenido anterior si lo hay
+        setLayout(new GridBagLayout());
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(20, 0, 20, 0);
-        gbc.gridx = 0;
+        gbc.gridx = 3;
 
         // Cargar íconos
         ImageIcon iconoHover = cargarIcono("iconos/buttonrectangleborder.png");
@@ -131,27 +132,56 @@ public class PanelPrincipal extends JFrame {
 
 
 //  Inicializacion Mapa, va después que carga MapaPanel
-    public void iniciarMapa(Piso pisoInicial, Ruta ruta, ControladorPanel controlador) {
+public void iniciarMapa(Piso pisoInicial, Ruta ruta,
+                        ControladorPanel controlador, int pisoActual) {
+    getContentPane().removeAll();
+    setLayout(new BorderLayout());
+
+    // Panel del mapa
+    MapaPanel mapaPanel = new MapaPanel(pisoInicial, ruta, controlador);
+    add(mapaPanel, BorderLayout.CENTER);
+
+    // Panel inferior principal con BorderLayout
+    JPanel panelInferior = new JPanel(new BorderLayout());
+    panelInferior.setBackground(Color.DARK_GRAY);
+
+    // Panel izquierdo con etiqueta del piso
+    JPanel panelIzquierdo = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    panelIzquierdo.setOpaque(false);
+    JLabel lblPiso = new JLabel("Piso: " + pisoActual);
+    lblPiso.setForeground(Color.WHITE);
+    lblPiso.setFont(new Font("Arial", Font.BOLD, 14));
+    panelIzquierdo.add(lblPiso);
+
+    // Panel central con botones subir/bajar
+    JPanel panelCentro = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    panelCentro.setOpaque(false);
+    btnBajar = crearBotonPiso("iconos/minuspng.png", e -> controlador.cambiarPiso(-1));
+    btnSubir = crearBotonPiso("iconos/pluspng.png", e -> controlador.cambiarPiso(+1));
+    panelCentro.add(btnBajar);
+    panelCentro.add(btnSubir);
+
+    // Panel derecho con botón volver
+    JPanel panelDerecho = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+    panelDerecho.setOpaque(false);
+    JButton btnVolver = crearBotonConHover("← Menú", cargarIcono("iconos/buttonrectangledepthgloss.jpg"), cargarIcono("iconos/buttonrectangleborder.png"));
+    btnVolver.setPreferredSize(new Dimension(120, 40)); // Más pequeño
+    btnVolver.addActionListener(e -> {
         getContentPane().removeAll();
-        setLayout(new BorderLayout());
+        repaint();
+        revalidate();
+        mostrarMenu();
+    });
+    panelDerecho.add(btnVolver);
 
-        // Panel del mapa
-        MapaPanel mapaPanel = new MapaPanel(pisoInicial, ruta, controlador);
-        add(mapaPanel, BorderLayout.CENTER);
+    // Añadir los paneles al panel inferior
+    panelInferior.add(panelIzquierdo, BorderLayout.WEST);
+    panelInferior.add(panelCentro, BorderLayout.CENTER);
+    panelInferior.add(panelDerecho, BorderLayout.EAST);
 
-        // Panel inferior con botones
-        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        panelBotones.setBackground(Color.DARK_GRAY);
-
-        btnBajar = crearBotonPiso("iconos/minuspng.png", e -> controlador.cambiarPiso(-1));
-        btnSubir = crearBotonPiso("iconos/pluspng.png", e -> controlador.cambiarPiso(+1));
-
-        panelBotones.add(btnBajar);
-        panelBotones.add(btnSubir);
-        add(panelBotones, BorderLayout.SOUTH);
-
-        setVisible(true);
-    }
+    add(panelInferior, BorderLayout.SOUTH);
+    setVisible(true);
+}
 
     private JButton crearBotonPiso(String pathIcono, java.awt.event.ActionListener action) {
         JButton boton = new JButton();

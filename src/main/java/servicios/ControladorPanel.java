@@ -49,7 +49,7 @@ public class ControladorPanel {
             ruta = rutas.isEmpty() ? new Ruta() : rutas.getFirst();
         }
 
-        ventana.iniciarMapa(pisoInicial, ruta, this);
+        ventana.iniciarMapa(pisoInicial, ruta, this, pisoActual);
         ventana.actualizarBotonesPiso(pisoActual, edificio.getPisos().size());
     }
 
@@ -71,7 +71,7 @@ public class ControladorPanel {
 
         Ruta ruta = obtenerTramoParaPisoActual();
 
-        ventana.iniciarMapa(piso, ruta, this);
+        ventana.iniciarMapa(piso, ruta, this, pisoActual);
         ventana.actualizarBotonesPiso(pisoActual, edificio.getPisos().size());
     }
 
