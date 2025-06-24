@@ -1,7 +1,6 @@
 import modelo.edificio.Edificio;
 import modelo.edificio.Piso;
 import modelo.elementos.Sala;
-import modelo.navegacion.Punto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import persistencia.CargadorEdificios;
