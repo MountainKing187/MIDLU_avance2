@@ -4,7 +4,7 @@
     {
       "numero": 1,
       "nombre": "Planta Baja",
-      "imagen": "src/main/resources/imagenes/edificio_ejemplo/piso2.bmp",
+      "imagen": "src/main/resources/imagenes/edificio_ejemplo/piso1.bmp",
       "salas": [
         {
           "nombre": "Cocina",
@@ -65,29 +65,20 @@
       "imagen": "src/main/resources/imagenes/edificio_ejemplo/piso2.bmp",
       "salas": [
         {
-          "nombre": "Sala V97",
+          "nombre": "Sala 101",
           "entradas": [
             {
-              "x": 19,
-              "y": 17
+              "x": 20,
+              "y": 20
             }
           ]
         },
         {
-          "nombre": "Sala VL-202",
+          "nombre": "Sala 102",
           "entradas": [
             {
-              "x": 19,
-              "y": 31
-            }
-          ]
-        },
-        {
-          "nombre": "Oficina Gabriel",
-          "entradas": [
-            {
-              "x": 19,
-              "y": 59
+              "x": 40,
+              "y": 50
             }
           ]
         }
