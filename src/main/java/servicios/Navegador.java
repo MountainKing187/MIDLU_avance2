@@ -7,13 +7,16 @@ import modelo.navegacion.Punto;
 import modelo.PuntoAcceso;
 import modelo.navegacion.Ruta;
 
+import java.awt.image.BufferedImage;
 import java.util.*;
 
 public class Navegador {
     private final Edificio edificio;
-    private final Pathfinding pathfinding; // Asumo que Pathfinding ya está optimizado y funciona bien para rutas en el mismo piso.
+    private final ArrayList<Edificio> edificios;
+    private final Pathfinding pathfinding;
 
     public Navegador(Edificio edificio) {
+        this.edificios = new ArrayList<Edificio>();
         this.edificio = edificio;
         this.pathfinding = new Pathfinding();
     }

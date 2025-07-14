@@ -1,0 +1,144 @@
+{
+  "nombre": "Pabellon RA",
+  "latitude": -38.747406,
+  "longitude": -72.616406,
+  "pisos": [
+    {
+      "numero": 1,
+      "nombre": " Piso Uno",
+      "imagen": "pabellonRA/Piso1RA.bmp",
+      "salas": [
+        {
+          "nombre": "RA-1004",
+          "entradas": [
+            {"x": 16, "y": 45}
+          ]
+        },
+        {
+          "nombre": "RA-1003",
+          "entradas": [
+            {"x": 16, "y": 35}
+          ]
+        },
+        {
+          "nombre": "RA-1002",
+          "entradas": [
+            {"x": 16, "y": 25}
+          ]
+        },
+        {
+          "nombre": "RA-1001 ",
+          "entradas": [
+            {"x": 15, "y": 12}
+          ]
+        },
+        {
+          "nombre": "Baño de hombres",
+          "entradas": [
+            {"x": 11, "y": 9}
+          ]
+        },
+        {
+          "nombre": "Baño de mujeres",
+          "entradas": [
+            {"x": 7, "y": 9}
+          ]
+        }
+      ],
+      "puntosAcceso": [
+        {
+          "tipo": "ESCALERA",
+          "id": "escalera_norte",
+          "x": 16,
+          "y": 20,
+          "conectadoId": "escalera_norte_p2"
+        },
+        {
+          "tipo": "ESCALERA",
+          "id": "escalera_sur",
+          "x": 7,
+          "y": 48,
+          "conectadoId": "escalera_sur_p2"
+        }
+      ],
+      "salidas": [
+        {
+          "nombre": "Salida Norte",
+          "ubicacion": {"x": 26, "y": 17},
+          "esPrincipal": true
+        },
+        {
+          "nombre": "Salida Sur",
+          "ubicacion": {"x": 11, "y": 52},
+          "esPrincipal": true
+        }
+      ]
+    },
+    {
+      "numero": 2,
+      "nombre": "Segundo Piso",
+      "imagen": "pabellonRA/Piso2RA.bmp",
+      "salas": [
+        {
+          "nombre": "RA-2005",
+          "entradas": [
+            {"x": 16, "y": 45}
+          ]
+        },
+        {
+          "nombre": "RA-2004",
+          "entradas": [
+            {"x": 16, "y": 35}
+          ]
+        },
+        {
+          "nombre": "RA-2003",
+          "entradas": [
+            {"x": 16, "y": 25}
+          ]
+        },
+        {
+          "nombre": "RA-2002 ",
+          "entradas": [
+            {"x": 11, "y": 13}
+          ]
+        },
+        {
+          "nombre": "RA-2001",
+          "entradas": [
+            {"x": 11, "y": 15}
+          ]
+        }
+      ],
+      "puntosAcceso": [
+        {
+          "tipo": "ESCALERA",
+          "id": "escalera_norte_p2",
+          "x": 16,
+          "y": 20,
+          "conectadoId": "escalera_norte"
+        },
+        {
+          "tipo": "ESCALERA",
+          "id": "escalera_sur_p2",
+          "x": 7,
+          "y": 48,
+          "conectadoId": "escalera_sur"
+        }
+      ]
+    }
+  ],
+  "configuracion": {
+    "colores": {
+      "paredes": "#000000",
+      "salas": "#0000FF",
+      "ascensores": "#FF0000",
+      "escaleras": "#FF6600",
+      "salidas": "#FFFF00"
+    },
+    "accesibilidad": {
+      "priorizarAscensores": true,
+      "rutaAlternativaSinAscensores": false
+    }
+  }
+}

@@ -14,7 +14,6 @@ public class CargadorInicial {
 
     public CargadorInicial(String rutaJSON) {
         Edificio edificioCargado = null;
-
         try {
             edificioCargado = CargadorEdificios.cargarDesdeJSON(rutaJSON);
         } catch (Exception e) {

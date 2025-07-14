@@ -27,7 +27,7 @@ public class CargadorEdificios {
             JSONObject jsonEdificio = new JSONObject(tokener);
 
             // Crear el edificio
-            Edificio edificio = new Edificio(jsonEdificio.getString("nombre"));
+            Edificio edificio = new Edificio(jsonEdificio.getString("nombre"), jsonEdificio.getDouble("latitude"), jsonEdificio.getDouble("longitude") );
 
             // Mapa para conectar puntos de acceso por ID
             Map<String, PuntoAcceso> mapaPuntosAcceso = new HashMap<>();
@@ -166,21 +166,6 @@ public class CargadorEdificios {
                         System.err.println("Error conectando puntos: " + idOrigen + " -> " + idDestino);
                     }
                 }
-            }
-        }
-    }
-
-    // Método auxiliar para cargar configuraciones adicionales
-    public static void cargarConfiguracion(Edificio edificio, String rutaArchivo) throws Exception {
-        try (InputStream is = new FileInputStream(new File(rutaArchivo))) {
-            JSONTokener tokener = new JSONTokener(is);
-            JSONObject jsonConfig = new JSONObject(tokener);
-
-            if (jsonConfig.has("configuracion")) {
-                JSONObject config = jsonConfig.getJSONObject("configuracion");
-
-                // Aquí puedes cargar configuraciones adicionales del edificio
-                // como paletas de colores, parámetros de accesibilidad, etc.
             }
         }
     }
