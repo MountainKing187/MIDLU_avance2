@@ -28,7 +28,7 @@ public class CargadorEdificios {
             JSONObject jsonEdificio = new JSONObject(tokener);
 
             // Crear el edificio
-            Edificio edificio = new Edificio(jsonEdificio.getString("nombre"), jsonEdificio.getDouble("latitude"), jsonEdificio.getDouble("longitude") );
+            Edificio edificio = new Edificio(jsonEdificio.getString("nombre"), jsonEdificio.getDouble("latitud"), jsonEdificio.getDouble("longitud") );
 
             // Mapa para conectar puntos de acceso por ID
             Map<String, PuntoAcceso> mapaPuntosAcceso = new HashMap<>();

@@ -4,14 +4,14 @@ import java.util.ArrayList;
 
 public class Edificio {
     private String nombre;
-    private double latitude;
-    private double longitude;
+    private double latitud;
+    private double longitud;
     private ArrayList<Piso> pisos = new ArrayList<>();
 
-    public Edificio(String nombre, double latitude, double longitude) {
+    public Edificio(String nombre, double latitud, double longitud) {
         this.nombre = nombre;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.latitud = latitud;
+        this.longitud = longitud;
     }
 
     public void agregarPiso(Piso piso) {
@@ -21,6 +21,10 @@ public class Edificio {
     // Getters
     public String getNombre() { return nombre; }
     public ArrayList<Piso> getPisos() { return pisos; }
+
+    public double getLatitud() { return latitud; }
+
+    public double getLongitud() { return longitud; }
 
     public Piso getPiso(int numero) {
         return pisos.stream()

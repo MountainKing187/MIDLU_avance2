@@ -1,7 +1,7 @@
 {
   "nombre": "Pabellon RA",
-  "latitude": -38.747406,
-  "longitude": -72.616406,
+  "latitud": -38.747406,
+  "longitud": -72.616406,
   "pisos": [
     {
       "numero": 1,
