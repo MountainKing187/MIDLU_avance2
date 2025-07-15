@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import persistencia.CargadorEdificios;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,8 +19,14 @@ public class EdificioEjemploTest {
         try {
             edificio = CargadorEdificios.cargarDesdeJSON("src/main/resources/EdificiosJSON/EdificioEjemplo.json");
         } catch (Exception e) {
-            assertNotNull(edificio, "El edificio no debería ser null");
+            assertNotNull(edificio, "El edificio no debería ser null"+e);
         }
+    }
+
+    @Test
+    public void testCargaEdificios(){
+        ArrayList<Edificio> edificios = CargadorEdificios.cargarEdificios("src/main/resources/EdificiosJSON/Edificios.json");
+        assertEquals(2, edificios.size());
     }
 
     @Test

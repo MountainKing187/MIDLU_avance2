@@ -17,10 +17,48 @@ import org.json.JSONTokener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class CargadorEdificios {
+
+    public static ArrayList<Edificio> cargarEdificios(String rutaArchivo){
+        String[] rutasEdificios;
+        ArrayList<Edificio> edificios = new ArrayList<Edificio>();
+        Edificio edificioNuevo;
+
+        try {
+            rutasEdificios = obtenerRutas(rutaArchivo);
+            for (String ruta : rutasEdificios){
+                edificioNuevo = cargarDesdeJSON(ruta);
+                edificios.add(edificioNuevo);
+            }
+        }
+        catch (Exception e){
+            System.out.println(e);
+        }
+        return edificios;
+    }
+
+    private static String[] obtenerRutas(String rutaArchivo) throws Exception{
+        try (InputStream is = new FileInputStream(new File(rutaArchivo))) {
+            // Parse the JSON string
+            JSONTokener tokener = new JSONTokener(is);
+            JSONObject jsonObject = new JSONObject(tokener);
+
+            // Get the JSON array
+            JSONArray edificiosArray = jsonObject.getJSONArray("Edificios");
+
+            // Convert to String[]
+            String[] filePaths = new String[edificiosArray.length()];
+            for (int i = 0; i < edificiosArray.length(); i++) {
+                filePaths[i] = edificiosArray.getString(i);
+            }
+
+            return filePaths;
+        }
+    }
 
     public static Edificio cargarDesdeJSON(String rutaArchivo) throws Exception {
         try (InputStream is = new FileInputStream(new File(rutaArchivo))) {

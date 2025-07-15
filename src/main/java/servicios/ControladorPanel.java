@@ -45,7 +45,7 @@ public class ControladorPanel {
 
             puntoOrigenUsuario = origen;
 
-            ArrayList<Ruta> rutas = navegador.calcularRutaCompleta(origen, destino, necesitaAscensor);
+            ArrayList<Ruta> rutas = navegador.calcularRutaCompleta(edificio,origen, destino, necesitaAscensor);
             ruta = rutas.isEmpty() ? new Ruta() : rutas.getFirst();
         }
 
@@ -92,7 +92,7 @@ public class ControladorPanel {
 
     private void recalcularRuta() {
         if (puntoOrigenUsuario != null && salaDestino != null) {
-            rutaCompleta = navegador.calcularRutaCompleta(
+            rutaCompleta = navegador.calcularRutaCompleta(edificio,
                     puntoOrigenUsuario,
                     salaDestino.getEntradas().get(0),
                     false

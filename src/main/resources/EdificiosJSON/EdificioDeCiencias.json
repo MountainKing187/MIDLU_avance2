@@ -1,5 +1,7 @@
 {
   "nombre": "Edificio de Ciencias",
+  "latitud": -38.747406,
+  "longitud": -72.616406,
   "pisos": [
     {
       "numero": 1,
@@ -39,7 +41,8 @@
       "salidas": [
         {
           "nombre": "Salida Principal",
-          "ubicacion": {"x": 10, "y": 10},
+          "x": 10,
+          "y": 10,
           "esPrincipal": true
         }
       ]
@@ -51,7 +54,8 @@
       "salas": [
         {
           "nombre": "Aula 201",
-          "ubicacion": {"x": 100, "y": 90},
+          "x": 100,
+          "y": 90,
           "ancho": 55,
           "alto": 35
         }

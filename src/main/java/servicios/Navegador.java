@@ -1,6 +1,5 @@
 package servicios;
 
-import servicios.GoogleStaticMapRequester;
 import modelo.edificio.Edificio;
 import modelo.edificio.Piso;
 import modelo.elementos.Sala;
@@ -9,7 +8,6 @@ import modelo.PuntoAcceso;
 import modelo.navegacion.Ruta;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.util.*;
@@ -18,7 +16,7 @@ import java.util.List;
 public class Navegador {
     private final ArrayList<Edificio> edificios = new ArrayList<Edificio>();
 
-    public Navegador() {}
+    public Navegador(Edificio edificio) {}
 
     /**
      * Calcula la ruta más corta entre dos puntos, que pueden estar en diferentes pisos.

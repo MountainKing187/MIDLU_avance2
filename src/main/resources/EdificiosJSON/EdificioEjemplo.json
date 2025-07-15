@@ -1,5 +1,7 @@
 {
   "nombre": "Edificio Ejemplo",
+  "latitud": -38.747406,
+  "longitud": -72.616406,
   "pisos": [
     {
       "numero": 1,
