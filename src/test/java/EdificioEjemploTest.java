@@ -1,10 +1,12 @@
 import modelo.edificio.Edificio;
 import modelo.edificio.Piso;
 import modelo.elementos.Sala;
+import servicios.Navegador;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import persistencia.CargadorEdificios;
 
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -37,6 +39,18 @@ public class EdificioEjemploTest {
                 .findFirst();
 
         assertTrue(salaCocina.isPresent(), "La sala 'Cocina' debería existir");
+    }
+
+    @Test
+    public void testGoogleMapsApi(){
+        ArrayList<Edificio> edificios = CargadorEdificios.cargarEdificios("src/main/resources/EdificiosJSON/Edificios.json");
+        BufferedImage mapaRuta = Navegador.crearRutaEdificios(edificios.get(0),edificios.get(1));
+
+        assertNotNull(mapaRuta);
+        assertTrue(mapaRuta.getWidth() > 0);
+        assertTrue(mapaRuta.getHeight() > 0);
+        assertEquals(BufferedImage.class, mapaRuta.getClass());
+
     }
 
     @Test
