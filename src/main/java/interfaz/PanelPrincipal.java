@@ -1,11 +1,14 @@
 package interfaz;
 
+import modelo.edificio.Edificio;
 import modelo.edificio.Piso;
+import modelo.elementos.Sala;
 import modelo.navegacion.Ruta;
 import servicios.ControladorPanel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.awt.*;
 import java.io.IOException;
@@ -17,6 +20,10 @@ public class PanelPrincipal extends JFrame {
 
     private JButton btnSubir;
     private JButton btnBajar;
+    private JComboBox<Edificio> edificioComboInicio;
+    private JComboBox<Edificio> edificioComboDestino;
+    private JComboBox<Sala> salaComboInicio;
+    private JComboBox<Sala> salaComboDestino;
     private boolean recursosCargadosCorrectamente = true;
 
     public PanelPrincipal() {
@@ -47,36 +54,7 @@ public class PanelPrincipal extends JFrame {
         JButton btnIniciar = crearBotonConHover("Iniciar Mapa", iconoNormal, iconoHover);
         JButton btnSalir = crearBotonConHover("Cerrar Programa", iconoNormal, iconoHover);
 
-        btnIniciar.addActionListener(e -> {
-            List<String> salas = controlador.getTodasLasSalas();
-            if (salas.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "No hay salas disponibles en el edificio.");
-                return;
-            }
-
-            JComboBox<String> comboSalas = new JComboBox<>(salas.toArray(new String[0]));
-            JCheckBox chkAscensor = new JCheckBox("Necesito ascensor");
-
-            JPanel panel = new JPanel(new GridLayout(2, 1));
-            panel.add(new JLabel("Selecciona la sala destino:"));
-            panel.add(comboSalas);
-            panel.add(chkAscensor);
-
-            int opcion = JOptionPane.showConfirmDialog(
-                    this,
-                    panel,
-                    "Configuración de ruta",
-                    JOptionPane.OK_CANCEL_OPTION
-            );
-
-            if (opcion == JOptionPane.OK_OPTION) {
-                String salaSeleccionada = (String) comboSalas.getSelectedItem();
-                boolean necesitaAscensor = chkAscensor.isSelected();
-
-                controlador.setSalaDestino(salaSeleccionada);
-                controlador.iniciarMapa(necesitaAscensor);
-            }
-        });
+        btnIniciar.addActionListener(e -> panelDestino());
 
         btnSalir.addActionListener(e -> System.exit(0));
 
@@ -256,4 +234,90 @@ public void iniciarMapa(Piso pisoInicial, Ruta ruta,
         boton.setEnabled(habilitado);
     }
 
+    private void updateSalaCombo(JComboBox<Sala> salaCombo, JComboBox<Edificio> edificioCombo) {
+        // Get the currently selected building
+        Edificio selectedEdificio = (Edificio) edificioCombo.getSelectedItem();
+
+        // Clear the current room list
+        salaCombo.removeAllItems();
+
+        if (selectedEdificio != null) {
+            for (Sala sala : controlador.getSalasEdificios(selectedEdificio)) {
+                salaCombo.addItem(sala);
+            }
+        }
+
+        // Enable/disable based on room availability
+        salaCombo.setEnabled(salaCombo.getItemCount() > 0);
+    }
+
+    private void panelDestino(){
+        List<Edificio> edificios = controlador.getEdificios();
+
+        edificioComboInicio = new JComboBox<>();
+        for (Edificio edificio : edificios) {
+            edificioComboInicio.addItem(edificio);
+        }
+
+        edificioComboDestino = new JComboBox<>();
+        for (Edificio edificio : edificios) {
+            edificioComboDestino.addItem(edificio);
+        }
+
+
+        salaComboInicio = new JComboBox<>();
+        salaComboDestino = new JComboBox<>();
+
+        JCheckBox chkAscensor = new JCheckBox("Necesito ascensor");
+
+        JPanel panel = new JPanel(new GridLayout(3, 1));
+        panel.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
+
+        edificioComboInicio.addActionListener(ev -> updateSalaCombo(salaComboInicio,edificioComboInicio));
+        edificioComboDestino.addActionListener(ev -> updateSalaCombo(salaComboDestino,edificioComboDestino));
+
+
+        JPanel inicio = new JPanel(new GridLayout(1,2));
+        JPanel destino = new JPanel(new GridLayout(1,2));
+
+
+        inicio.add(new JLabel("Seleccione Edificio actual: "));
+        inicio.add(edificioComboInicio,BorderLayout.NORTH);
+
+        inicio.add(new JLabel("Seleccione Sala actual: "));
+        inicio.add(salaComboInicio,BorderLayout.SOUTH);
+
+        destino.add(new JLabel("Seleccione Edificio destino: "));
+        destino.add(edificioComboDestino,BorderLayout.NORTH);
+
+
+        destino.add(new JLabel("Seleccione Sala destino: "));
+        destino.add(salaComboDestino,BorderLayout.SOUTH);
+
+        panel.add(inicio);
+        panel.add(destino);
+        panel.add(chkAscensor);
+
+        edificioComboInicio.setSelectedIndex(0);
+        updateSalaCombo(salaComboInicio,edificioComboInicio);
+
+        edificioComboDestino.setSelectedIndex(0);
+        updateSalaCombo(salaComboDestino,edificioComboDestino);
+
+        int opcion = JOptionPane.showConfirmDialog(
+                this,
+                panel,
+                "Configuración de ruta",
+                JOptionPane.OK_CANCEL_OPTION
+        );
+
+        if (opcion == JOptionPane.OK_OPTION) {
+            Sala salaSeleccionada = (Sala) salaComboInicio.getSelectedItem();
+            boolean necesitaAscensor = chkAscensor.isSelected();
+
+            //controlador.setSalaDestino(salaSeleccionada);
+            controlador.iniciarMapa(necesitaAscensor);
+        }
+
+    }
 }

@@ -32,4 +32,9 @@ public class Edificio {
                 .findFirst()
                 .orElse(null);
     }
+
+    @Override
+    public String toString(){
+        return getNombre();
+    }
 }

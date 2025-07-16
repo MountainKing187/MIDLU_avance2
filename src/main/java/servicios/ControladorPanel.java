@@ -26,7 +26,7 @@ public class ControladorPanel {
 
     public ControladorPanel(PanelPrincipal ventana) {
         try {
-            this.edificios = CargadorEdificios.cargarEdificios("src/main/resources/EdificiosJSON/Edificio.json");
+            this.edificios = CargadorEdificios.cargarEdificios("src/main/resources/EdificiosJSON/Edificios.json");
             this.edificio = CargadorEdificios.cargarDesdeJSON("src/main/resources/EdificiosJSON/EdificioEjemplo.json");
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -84,10 +84,23 @@ public class ControladorPanel {
     }
 
     public List<String> getTodasLasSalas() {
-        return edificio.getPisos().stream()
-                .flatMap(p -> p.getSalas().stream())
-                .map(Sala::getNombre)
-                .collect(Collectors.toList());
+        List<String> salas = new ArrayList<>();
+        for (Edificio edificio : edificios){
+            for (Piso piso : edificio.getPisos()){
+                for (Sala sala : piso.getSalas()) {
+                    salas.add(sala.getNombre());
+                }
+            }
+        }
+        return  salas;
+    }
+
+    public List<Sala> getSalasEdificios(Edificio edificio){
+        List<Sala> salas = new ArrayList<>();
+        for (Piso piso : edificio.getPisos()){
+            salas.addAll(piso.getSalas());
+        }
+        return  salas;
     }
 
     private void recalcularRuta() {
@@ -114,5 +127,17 @@ public class ControladorPanel {
             }
         }
         return tramo; // ruta vacía si no hay tramo en ese piso
+    }
+
+    public ArrayList<Edificio> getEdificios() {
+        return edificios;
+    }
+
+    public List<String> getNombresEdificios(){
+        List<String> nombres = new ArrayList<>();
+        for (Edificio edificio : edificios){
+            nombres.add(edificio.getNombre());
+        }
+        return nombres;
     }
 }

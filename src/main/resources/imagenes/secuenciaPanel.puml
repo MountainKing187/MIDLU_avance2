@@ -1,0 +1,13 @@
+@startuml
+start
+:Preguntamos Destino-Final;
+if (Estan dentro del mismo Edificio) then (si)
+  :Llamamos Navegador.navegarASala();
+  :Mostramos el mapa de la ruta;
+  stop
+else (no)
+  :Llamamos y mostramos Navegadorr.navegarASalida();
+  :Llamamos y mostramos Navegador.crearRutaEdificios();
+  :Llamamos y mostramos Navegador.navegarASala();
+stop
+@enduml
