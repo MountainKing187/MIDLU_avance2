@@ -43,4 +43,9 @@ public class Piso {
         }
         return !obstaculos[x][y];
     }
+
+    public BufferedImage getImagenMapa() {
+        return imagenMapa;
+    }
+
 }

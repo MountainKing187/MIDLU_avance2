@@ -1,0 +1,6 @@
+{
+  "Edificios": [
+    "src/main/resources/EdificiosJSON/EdificioEjemplo.json",
+    "src/main/resources/EdificiosJSON/PabellonRA.json"
+  ]
+}

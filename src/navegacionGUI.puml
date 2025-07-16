@@ -1,0 +1,16 @@
+@startuml
+start
+
+:Inicia el programa;
+:Menú Principal;
+
+if ("¿Botón presionado?") then ([Iniciar Mapa])
+  :Selecciona sala de destino;
+  :Mapa interactivo;
+  :Presiona botón "Menú";
+  --> :Menú Principal;
+else ([Cerrar Programa])
+  stop
+endif
+
+@enduml

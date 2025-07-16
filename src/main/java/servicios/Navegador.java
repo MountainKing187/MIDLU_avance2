@@ -7,16 +7,16 @@ import modelo.navegacion.Punto;
 import modelo.PuntoAcceso;
 import modelo.navegacion.Ruta;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.util.*;
+import java.util.List;
 
 public class Navegador {
-    private final Edificio edificio;
-    private final Pathfinding pathfinding; // Asumo que Pathfinding ya está optimizado y funciona bien para rutas en el mismo piso.
+    private final ArrayList<Edificio> edificios = new ArrayList<Edificio>();
 
-    public Navegador(Edificio edificio) {
-        this.edificio = edificio;
-        this.pathfinding = new Pathfinding();
-    }
+    public Navegador(Edificio edificio) {}
 
     /**
      * Calcula la ruta más corta entre dos puntos, que pueden estar en diferentes pisos.
@@ -24,18 +24,19 @@ public class Navegador {
      * Si están en pisos diferentes, devuelve una lista de rutas segmentadas
      * (ruta en piso origen -> acceso -> ruta en piso intermedio -> ... -> acceso -> ruta en piso destino).
      *
+     * @param edificio El edificio en que se hara la navegacion
      * @param inicio El punto de inicio de la navegación.
      * @param destino El punto de destino de la navegación.
      * @param evitarEscaleras Indica si se deben evitar las escaleras (true) o si se pueden usar (false).
      * @return Un ArrayList de objetos Ruta que representan la secuencia de rutas a seguir.
      * Devuelve una lista vacía si no se encuentra una ruta.
      */
-    public ArrayList<Ruta> calcularRutaCompleta(Punto inicio, Punto destino, boolean evitarEscaleras) {
+    public static ArrayList<Ruta> calcularRutaCompleta(Edificio edificio, Punto inicio, Punto destino, boolean evitarEscaleras) {
         ArrayList<Ruta> rutasSegmentadas = new ArrayList<>();
 
         // Caso 1: Inicio y destino en el mismo piso
         if (inicio.getPiso().equals(destino.getPiso())) {
-            Ruta ruta = pathfinding.encontrarRuta(inicio, destino);
+            Ruta ruta = Pathfinding.encontrarRuta(inicio, destino);
             if (!ruta.getPuntos().isEmpty()) {
                 rutasSegmentadas.add(ruta);
             }
@@ -93,7 +94,7 @@ public class Navegador {
      * @return Un ArrayList de objetos Ruta que representan la secuencia de rutas a seguir.
      * Devuelve una lista vacía si la sala no tiene entradas o no se encuentra una ruta.
      */
-    public ArrayList<Ruta> navegarASala(Punto inicio, Sala salaDestino, boolean evitarEscaleras) {
+    public static ArrayList<Ruta> navegarASala(Edificio edificio, Punto inicio, Sala salaDestino, boolean evitarEscaleras) {
         if (salaDestino == null || salaDestino.getEntradas().isEmpty()) {
             System.out.println("La sala de destino no existe o no tiene entradas.");
             return new ArrayList<>();
@@ -105,7 +106,7 @@ public class Navegador {
 
         // Para cada entrada de la sala, calcula la ruta completa y elige la más corta.
         for (Punto entradaSala : salaDestino.getEntradas()) {
-            ArrayList<Ruta> rutaActual = calcularRutaCompleta(inicio, entradaSala, evitarEscaleras);
+            ArrayList<Ruta> rutaActual = calcularRutaCompleta(edificio, inicio, entradaSala, evitarEscaleras);
             if (!rutaActual.isEmpty()) {
                 double distanciaActual = rutaActual.stream().mapToDouble(Ruta::getDistanciaTotal).sum();
                 if (distanciaActual < menorDistancia) {
@@ -123,7 +124,7 @@ public class Navegador {
 
 
     /**
-     * Reimplementación de este método para corregir el cálculo de distancia entre pisos.
+     * Reimplementación de este métod para corregir el cálculo de distancia entre pisos.
      * Calcula la distancia total de una secuencia de puntos de acceso, incluyendo las rutas inter-piso.
      *
      * @param inicio El punto de inicio.
@@ -131,7 +132,7 @@ public class Navegador {
      * @param secuencia La lista de puntos de acceso que conectan los pisos.
      * @return La distancia total acumulada para esa secuencia.
      */
-    private double calcularDistanciaSecuencia(Punto inicio, Punto destino, List<PuntoAcceso> secuencia) {
+    private static double calcularDistanciaSecuencia(Punto inicio, Punto destino, List<PuntoAcceso> secuencia) {
         double distanciaTotal = 0.0;
         Punto puntoOrigenSegmento = inicio;
 
@@ -141,7 +142,7 @@ public class Navegador {
             Punto ubicacionPA_SiguientePiso = paActual.getPuntoConectado().getUbicacion(); // Punto del PA en el siguiente piso
 
             // 1. Ruta dentro del piso actual hasta la entrada del PuntoAcceso
-            Ruta rutaHastaPA = pathfinding.encontrarRuta(puntoOrigenSegmento, ubicacionPA_OrigenPiso);
+            Ruta rutaHastaPA = Pathfinding.encontrarRuta(puntoOrigenSegmento, ubicacionPA_OrigenPiso);
             if (rutaHastaPA.getPuntos().isEmpty()) {
                 return Double.MAX_VALUE; // Ruta inválida, esta secuencia no es viable
             }
@@ -156,7 +157,7 @@ public class Navegador {
         }
 
         // 4. Ruta final desde el último punto de acceso (en el piso destino) hasta el destino final
-        Ruta rutaFinal = pathfinding.encontrarRuta(puntoOrigenSegmento, destino);
+        Ruta rutaFinal = Pathfinding.encontrarRuta(puntoOrigenSegmento, destino);
         if (rutaFinal.getPuntos().isEmpty()) {
             return Double.MAX_VALUE; // Ruta inválida
         }
@@ -167,7 +168,7 @@ public class Navegador {
 
 
     /**
-     * Reimplementación de este método para corregir la generación de rutas entre pisos.
+     * Reimplementación de este métod para corregir la generación de rutas entre pisos.
      * Genera una lista de objetos Ruta que componen la ruta completa entre pisos.
      *
      * @param inicio El punto de inicio.
@@ -175,7 +176,7 @@ public class Navegador {
      * @param secuencia La mejor secuencia de puntos de acceso para la navegación.
      * @return Un ArrayList de objetos Ruta.
      */
-    private ArrayList<Ruta> generarRutasParaSecuencia(Punto inicio, Punto destino, List<PuntoAcceso> secuencia) {
+    private static ArrayList<Ruta> generarRutasParaSecuencia(Punto inicio, Punto destino, List<PuntoAcceso> secuencia) {
         ArrayList<Ruta> rutasSegmentadas = new ArrayList<>();
         Punto puntoOrigenSegmento = inicio; // El punto de inicio del segmento de ruta actual
 
@@ -185,7 +186,7 @@ public class Navegador {
             Punto ubicacionPA_SiguientePiso = paActual.getPuntoConectado().getUbicacion(); // Punto del PA en el siguiente piso
 
             // 1. Ruta dentro del piso actual hasta la entrada del PuntoAcceso
-            Ruta rutaHastaPA = pathfinding.encontrarRuta(puntoOrigenSegmento, ubicacionPA_OrigenPiso);
+            Ruta rutaHastaPA = Pathfinding.encontrarRuta(puntoOrigenSegmento, ubicacionPA_OrigenPiso);
             if (rutaHastaPA.getPuntos().isEmpty()) {
                 System.err.println("Error: No se pudo encontrar ruta al PA " + paActual.getTipo() + " en piso " + paActual.getUbicacion().getPiso().getNumero());
                 return new ArrayList<>(); // Si un segmento no se puede calcular, toda la secuencia es inválida.
@@ -201,7 +202,7 @@ public class Navegador {
         }
 
         // 3. Ruta final desde el último punto de acceso (en el piso destino) hasta el destino final
-        Ruta rutaFinal = pathfinding.encontrarRuta(puntoOrigenSegmento, destino);
+        Ruta rutaFinal = Pathfinding.encontrarRuta(puntoOrigenSegmento, destino);
         if (rutaFinal.getPuntos().isEmpty()) {
             System.err.println("Error: No se pudo encontrar ruta desde el último PA hasta el destino final en piso " + destino.getPiso().getNumero());
             return new ArrayList<>(); // Si el último segmento no se puede calcular, toda la secuencia es inválida.
@@ -215,7 +216,7 @@ public class Navegador {
      * BFS para encontrar secuencias de puntos de acceso.
      * No necesita grandes cambios, solo el cálculo de maxProfundidad que se mueve al método público.
      */
-    private List<List<PuntoAcceso>> encontrarTodasSecuenciasPuntosAcceso(
+    private static List<List<PuntoAcceso>> encontrarTodasSecuenciasPuntosAcceso(
             Piso pisoInicioBusqueda, // Renombrado para claridad
             Piso pisoDestinoBusqueda, // Renombrado para claridad
             boolean evitarEscaleras,
@@ -284,6 +285,25 @@ public class Navegador {
             this.piso = piso;
             this.secuencia = secuencia;
             this.visitados = visitados;
+        }
+    }
+
+    public static BufferedImage crearRutaEdificios(Edificio edificioInicio, Edificio edificioFinal){
+        try {
+            GoogleStaticMapRequester googleMapApi = new GoogleStaticMapRequester();
+
+            byte[] mapaBytes = googleMapApi.getRouteMap(
+                    edificioInicio.getLatitud(),
+                    edificioInicio.getLongitud(),
+                    edificioFinal.getLatitud(),
+                    edificioFinal.getLongitud()
+            );
+
+            ByteArrayInputStream bis = new ByteArrayInputStream(mapaBytes);
+            return ImageIO.read(bis);
+        } catch (Exception e){
+            System.out.print(e);
+            return null;
         }
     }
 }

@@ -10,16 +10,55 @@ import modelo.elementos.Sala;
 import modelo.elementos.Salida;
 import modelo.navegacion.Punto;
 import servicios.ProcesadorMapa;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class CargadorEdificios {
+
+    public static ArrayList<Edificio> cargarEdificios(String rutaArchivo){
+        String[] rutasEdificios;
+        ArrayList<Edificio> edificios = new ArrayList<Edificio>();
+        Edificio edificioNuevo;
+
+        try {
+            rutasEdificios = obtenerRutas(rutaArchivo);
+            for (String ruta : rutasEdificios){
+                edificioNuevo = cargarDesdeJSON(ruta);
+                edificios.add(edificioNuevo);
+            }
+        }
+        catch (Exception e){
+            System.out.println(e);
+        }
+        return edificios;
+    }
+
+    private static String[] obtenerRutas(String rutaArchivo) throws Exception{
+        try (InputStream is = new FileInputStream(new File(rutaArchivo))) {
+            // Parse the JSON string
+            JSONTokener tokener = new JSONTokener(is);
+            JSONObject jsonObject = new JSONObject(tokener);
+
+            // Get the JSON array
+            JSONArray edificiosArray = jsonObject.getJSONArray("Edificios");
+
+            // Convert to String[]
+            String[] filePaths = new String[edificiosArray.length()];
+            for (int i = 0; i < edificiosArray.length(); i++) {
+                filePaths[i] = edificiosArray.getString(i);
+            }
+
+            return filePaths;
+        }
+    }
 
     public static Edificio cargarDesdeJSON(String rutaArchivo) throws Exception {
         try (InputStream is = new FileInputStream(new File(rutaArchivo))) {
@@ -27,7 +66,7 @@ public class CargadorEdificios {
             JSONObject jsonEdificio = new JSONObject(tokener);
 
             // Crear el edificio
-            Edificio edificio = new Edificio(jsonEdificio.getString("nombre"));
+            Edificio edificio = new Edificio(jsonEdificio.getString("nombre"), jsonEdificio.getDouble("latitud"), jsonEdificio.getDouble("longitud") );
 
             // Mapa para conectar puntos de acceso por ID
             Map<String, PuntoAcceso> mapaPuntosAcceso = new HashMap<>();
@@ -166,21 +205,6 @@ public class CargadorEdificios {
                         System.err.println("Error conectando puntos: " + idOrigen + " -> " + idDestino);
                     }
                 }
-            }
-        }
-    }
-
-    // Método auxiliar para cargar configuraciones adicionales
-    public static void cargarConfiguracion(Edificio edificio, String rutaArchivo) throws Exception {
-        try (InputStream is = new FileInputStream(new File(rutaArchivo))) {
-            JSONTokener tokener = new JSONTokener(is);
-            JSONObject jsonConfig = new JSONObject(tokener);
-
-            if (jsonConfig.has("configuracion")) {
-                JSONObject config = jsonConfig.getJSONObject("configuracion");
-
-                // Aquí puedes cargar configuraciones adicionales del edificio
-                // como paletas de colores, parámetros de accesibilidad, etc.
             }
         }
     }
