@@ -53,7 +53,6 @@ public class EdificioEjemploTest {
         assertTrue(mapaRuta.getWidth() > 0);
         assertTrue(mapaRuta.getHeight() > 0);
         assertEquals(BufferedImage.class, mapaRuta.getClass());
-
     }
 
     @Test

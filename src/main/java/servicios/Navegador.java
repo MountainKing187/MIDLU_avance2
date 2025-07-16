@@ -120,6 +120,36 @@ public class Navegador {
         return mejorRutaCompleta;
     }
 
+    public static ArrayList<Ruta> navegarASalaASala(Edificio edificio, Sala salaOrigen, Sala salaDestino, boolean evitarEscaleras) {
+        if (salaDestino == null || salaDestino.getEntradas().isEmpty()) {
+            System.out.println("La sala de destino no existe o no tiene entradas.");
+            return new ArrayList<>();
+        }
+
+        Punto mejorEntrada = null;
+        double menorDistancia = Double.MAX_VALUE;
+        ArrayList<Ruta> mejorRutaCompleta = new ArrayList<>();
+
+        // Para cada entrada de la sala, calcula la ruta completa y elige la más corta.
+        for (Punto entradaSala : salaDestino.getEntradas()) {
+            for(Punto salidaSala : salaOrigen.getEntradas()){
+                ArrayList<Ruta> rutaActual = calcularRutaCompleta(edificio, salidaSala, entradaSala, evitarEscaleras);
+                if (!rutaActual.isEmpty()) {
+                    double distanciaActual = rutaActual.stream().mapToDouble(Ruta::getDistanciaTotal).sum();
+                    if (distanciaActual < menorDistancia) {
+                        menorDistancia = distanciaActual;
+                        mejorEntrada = entradaSala; // No es estrictamente necesario, pero útil para depuración.
+                        mejorRutaCompleta = rutaActual;
+                    }
+                }
+            }
+        }
+        if(mejorEntrada == null){
+            System.out.println("No se pudo encontrar una ruta a ninguna entrada de la sala.");
+        }
+        return mejorRutaCompleta;
+    }
+
     public static ArrayList<Ruta> navegarASalida(Edificio edificio, Punto inicio, boolean evitarEscaleras) {
         ArrayList<Ruta> mejorRuta = new ArrayList<>();
         ArrayList<Ruta> rutaTemporal = new ArrayList<>();

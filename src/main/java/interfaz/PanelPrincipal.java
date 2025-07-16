@@ -13,6 +13,7 @@ import java.util.List;
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Objects;
 
 public class PanelPrincipal extends JFrame {
 
@@ -126,8 +127,8 @@ public class PanelPrincipal extends JFrame {
 
 
 //  Inicializacion Mapa, va después que carga MapaPanel
-public void iniciarMapa(Piso pisoInicial, Ruta ruta,
-                        ControladorPanel controlador, int pisoActual) {
+public void iniciarMapa(Edificio edificioActual,Piso pisoInicial, Ruta ruta,
+                        ControladorPanel controlador, int pisoActual, ImagenPanel mapaGoogle) {
     getContentPane().removeAll();
     setLayout(new BorderLayout());
 
@@ -150,8 +151,8 @@ public void iniciarMapa(Piso pisoInicial, Ruta ruta,
     // Panel central con botones subir/bajar
     JPanel panelCentro = new JPanel(new FlowLayout(FlowLayout.CENTER));
     panelCentro.setOpaque(false);
-    btnBajar = crearBotonPiso("iconos/minuspng.png", e -> controlador.cambiarPiso(-1));
-    btnSubir = crearBotonPiso("iconos/pluspng.png", e -> controlador.cambiarPiso(+1));
+    btnBajar = crearBotonPiso("iconos/minuspng.png", e -> controlador.cambiarPiso(edificioActual,-1));
+    btnSubir = crearBotonPiso("iconos/pluspng.png", e -> controlador.cambiarPiso(edificioActual,+1));
     panelCentro.add(btnBajar);
     panelCentro.add(btnSubir);
 
@@ -265,8 +266,8 @@ public void iniciarMapa(Piso pisoInicial, Ruta ruta,
         }
 
 
-        salaComboInicio = new JComboBox<>();
-        salaComboDestino = new JComboBox<>();
+        salaComboInicio = new JComboBox<Sala>();
+        salaComboDestino = new JComboBox<Sala>();
 
         JCheckBox chkAscensor = new JCheckBox("Necesito ascensor");
 
@@ -312,11 +313,19 @@ public void iniciarMapa(Piso pisoInicial, Ruta ruta,
         );
 
         if (opcion == JOptionPane.OK_OPTION) {
-            Sala salaSeleccionada = (Sala) salaComboInicio.getSelectedItem();
+            Edificio edificioOrigen = (Edificio) edificioComboInicio.getSelectedItem();
+            Edificio edificioDestino = (Edificio) edificioComboDestino.getSelectedItem();
+            Sala salaOrigen = (Sala) salaComboInicio.getSelectedItem();
+            Sala salaDestino = (Sala) salaComboDestino.getSelectedItem();
             boolean necesitaAscensor = chkAscensor.isSelected();
 
-            //controlador.setSalaDestino(salaSeleccionada);
-            controlador.iniciarMapa(necesitaAscensor);
+            if (Objects.equals(edificioOrigen.getNombre(), edificioDestino.getNombre())){
+                controlador.iniciarMapaSala(edificioOrigen,salaOrigen,salaDestino,necesitaAscensor);
+            }
+            else {
+                controlador.setSalaDestino(salaOrigen.getNombre());
+                controlador.iniciarMapa(necesitaAscensor);
+            }
         }
 
     }

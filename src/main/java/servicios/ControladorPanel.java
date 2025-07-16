@@ -1,5 +1,6 @@
 package servicios;
 
+import interfaz.ImagenPanel;
 import interfaz.MapaPanel;
 import interfaz.PanelPrincipal;
 import modelo.edificio.Edificio;
@@ -9,6 +10,7 @@ import modelo.navegacion.Punto;
 import modelo.navegacion.Ruta;
 import persistencia.CargadorEdificios;
 
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,6 +18,8 @@ import java.util.stream.Collectors;
 public class ControladorPanel {
 
     private final Edificio edificio;
+    private Edificio edificioInicio;
+    private Edificio edificioDestino;
     private final ArrayList<Edificio> edificios;
     private final PanelPrincipal ventana;
 
@@ -49,30 +53,48 @@ public class ControladorPanel {
             ruta = rutas.isEmpty() ? new Ruta() : rutas.getFirst();
         }
 
-        ventana.iniciarMapa(pisoInicial, ruta, this, pisoActual);
+        ventana.iniciarMapa(edificio,pisoInicial, ruta, this, pisoActual);
         ventana.actualizarBotonesPiso(pisoActual, edificio.getPisos().size());
     }
 
+    public void iniciarMapaSala(Edificio edificioActual, Sala salaOrigen, Sala salaDestino, boolean necesitaAscensor) {
+        Piso pisoInicial = edificioActual.getPiso(pisoActual);
+        Ruta ruta = new Ruta();
 
-    public void manejarClicEnMapa(int x, int y, Piso piso) {
-        puntoOrigenUsuario = new Punto(x, y, piso);
-        recalcularRuta();
+        if (salaDestino != null) {
+            ArrayList<Ruta> rutas = Navegador.calcularRutaCompleta(edificioActual,salaOrigen.getEntradas().getFirst(), salaDestino.getEntradas().getFirst(),necesitaAscensor);
+            rutaCompleta = rutas;
+            ruta = rutas.isEmpty() ? new Ruta() : rutas.getFirst();
+        }
+
+        ventana.iniciarMapa(edificioActual,pisoInicial, ruta, this, pisoActual);
+        ventana.actualizarBotonesPiso(pisoActual, edificioActual.getPisos().size());
     }
 
-    public void cambiarPiso(int delta) {
+    public void iniciarMapaEdificios(Edificio edificioActual, Edificio edificioDestino, boolean necesitaAscensor) {
+        BufferedImage mapaGoogle = Navegador.crearRutaEdificios(edificioActual,edificioDestino);
+
+        ImagenPanel googleMapsImagen = new ImagenPanel(mapaGoogle,)
+
+        ventana.iniciarMapa(edificioActual,pisoInicial, ruta, this, pisoActual);
+        ventana.actualizarBotonesPiso(pisoActual, edificioActual.getPisos().size());
+    }
+
+
+    public void cambiarPiso(Edificio edificioActual,int delta) {
         int nuevoPiso = pisoActual + delta;
-        if (nuevoPiso < 1 || nuevoPiso > edificio.getPisos().size()) {
+        if (nuevoPiso < 1 || nuevoPiso > edificioActual.getPisos().size()) {
             System.out.println("⚠️ Piso fuera de rango.");
             return;
         }
 
         pisoActual = nuevoPiso;
-        Piso piso = edificio.getPiso(pisoActual);
+        Piso piso = edificioActual.getPiso(pisoActual);
 
         Ruta ruta = obtenerTramoParaPisoActual();
 
-        ventana.iniciarMapa(piso, ruta, this, pisoActual);
-        ventana.actualizarBotonesPiso(pisoActual, edificio.getPisos().size());
+        ventana.iniciarMapa(edificioActual,piso, ruta, this, pisoActual);
+        ventana.actualizarBotonesPiso(pisoActual, edificioActual.getPisos().size());
     }
 
     public void setSalaDestino(String nombreSala) {
