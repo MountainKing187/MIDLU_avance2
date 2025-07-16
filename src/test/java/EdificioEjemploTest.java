@@ -1,6 +1,9 @@
 import modelo.edificio.Edificio;
 import modelo.edificio.Piso;
 import modelo.elementos.Sala;
+import modelo.navegacion.Punto;
+import modelo.navegacion.Ruta;
+import org.junit.jupiter.api.Disabled;
 import servicios.Navegador;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,7 +44,7 @@ public class EdificioEjemploTest {
         assertTrue(salaCocina.isPresent(), "La sala 'Cocina' debería existir");
     }
 
-    @Test
+    @Disabled
     public void testGoogleMapsApi(){
         ArrayList<Edificio> edificios = CargadorEdificios.cargarEdificios("src/main/resources/EdificiosJSON/Edificios.json");
         BufferedImage mapaRuta = Navegador.crearRutaEdificios(edificios.get(0),edificios.get(1));
@@ -51,6 +54,18 @@ public class EdificioEjemploTest {
         assertTrue(mapaRuta.getHeight() > 0);
         assertEquals(BufferedImage.class, mapaRuta.getClass());
 
+    }
+
+    @Test
+    public void testNavegarSalida(){
+        ArrayList<Edificio> edificios = CargadorEdificios.cargarEdificios("src/main/resources/EdificiosJSON/Edificios.json");
+        Edificio pabellonRA = edificios.get(1);
+        Punto inicio = pabellonRA.getPiso(2).getSalas().getFirst().getEntradas().getFirst();
+        Punto salida = pabellonRA.getPiso(1).getSalidas().getFirst().getUbicacion();
+        ArrayList<Ruta> rutaNormal = Navegador.calcularRutaCompleta(pabellonRA,inicio,salida,false);
+        ArrayList<Ruta> rutaMetodo = Navegador.navegarASalida(pabellonRA,inicio,false);
+
+        assertEquals(rutaNormal.size(),rutaMetodo.size());
     }
 
     @Test

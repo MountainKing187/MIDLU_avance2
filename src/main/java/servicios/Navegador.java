@@ -3,6 +3,7 @@ package servicios;
 import modelo.edificio.Edificio;
 import modelo.edificio.Piso;
 import modelo.elementos.Sala;
+import modelo.elementos.Salida;
 import modelo.navegacion.Punto;
 import modelo.PuntoAcceso;
 import modelo.navegacion.Ruta;
@@ -14,9 +15,6 @@ import java.util.*;
 import java.util.List;
 
 public class Navegador {
-    private final ArrayList<Edificio> edificios = new ArrayList<Edificio>();
-
-    public Navegador(Edificio edificio) {}
 
     /**
      * Calcula la ruta más corta entre dos puntos, que pueden estar en diferentes pisos.
@@ -121,6 +119,26 @@ public class Navegador {
         }
         return mejorRutaCompleta;
     }
+
+    public static ArrayList<Ruta> navegarASalida(Edificio edificio, Punto inicio, boolean evitarEscaleras) {
+        ArrayList<Ruta> mejorRuta = new ArrayList<>();
+        ArrayList<Ruta> rutaTemporal = new ArrayList<>();
+        ArrayList<Salida> salidas = new ArrayList<>();
+
+        for (Piso piso : edificio.getPisos()){
+            salidas.addAll(piso.getSalidas());
+        }
+
+        for (Salida salida : salidas){
+            rutaTemporal = new ArrayList<>(calcularRutaCompleta(edificio,inicio,salida.getUbicacion(),evitarEscaleras));
+            if ( rutaTemporal.size() > mejorRuta.size()){
+                mejorRuta = new ArrayList<>(rutaTemporal);
+            }
+        }
+
+        return mejorRuta;
+    }
+
 
 
     /**
@@ -306,4 +324,5 @@ public class Navegador {
             return null;
         }
     }
+
 }

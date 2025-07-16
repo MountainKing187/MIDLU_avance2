@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class ControladorPanel {
 
     private final Edificio edificio;
-    private final Navegador navegador;
+    private final ArrayList<Edificio> edificios;
     private final PanelPrincipal ventana;
 
     private int pisoActual;
@@ -26,11 +26,11 @@ public class ControladorPanel {
 
     public ControladorPanel(PanelPrincipal ventana) {
         try {
+            this.edificios = CargadorEdificios.cargarEdificios("src/main/resources/EdificiosJSON/Edificio.json");
             this.edificio = CargadorEdificios.cargarDesdeJSON("src/main/resources/EdificiosJSON/EdificioEjemplo.json");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        this.navegador = new Navegador(edificio);
         this.ventana = ventana;
         this.pisoActual = 1;
     }
@@ -45,7 +45,7 @@ public class ControladorPanel {
 
             puntoOrigenUsuario = origen;
 
-            ArrayList<Ruta> rutas = navegador.calcularRutaCompleta(edificio,origen, destino, necesitaAscensor);
+            ArrayList<Ruta> rutas = Navegador.calcularRutaCompleta(edificio,origen, destino, necesitaAscensor);
             ruta = rutas.isEmpty() ? new Ruta() : rutas.getFirst();
         }
 
@@ -92,7 +92,7 @@ public class ControladorPanel {
 
     private void recalcularRuta() {
         if (puntoOrigenUsuario != null && salaDestino != null) {
-            rutaCompleta = navegador.calcularRutaCompleta(edificio,
+            rutaCompleta = Navegador.calcularRutaCompleta(edificio,
                     puntoOrigenUsuario,
                     salaDestino.getEntradas().get(0),
                     false
