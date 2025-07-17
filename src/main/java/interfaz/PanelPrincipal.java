@@ -8,12 +8,15 @@ import servicios.ControladorPanel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.util.ArrayList;
+import javax.swing.border.Border;
+import java.awt.image.BufferedImage;
+import java.beans.Visibility;
 import java.util.List;
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class PanelPrincipal extends JFrame {
 
@@ -21,6 +24,7 @@ public class PanelPrincipal extends JFrame {
 
     private JButton btnSubir;
     private JButton btnBajar;
+    private JButton btnMapaGlobal;
     private JComboBox<Edificio> edificioComboInicio;
     private JComboBox<Edificio> edificioComboDestino;
     private JComboBox<Sala> salaComboInicio;
@@ -128,13 +132,18 @@ public class PanelPrincipal extends JFrame {
 
 //  Inicializacion Mapa, va después que carga MapaPanel
 public void iniciarMapa(Edificio edificioActual,Piso pisoInicial, Ruta ruta,
-                        ControladorPanel controlador, int pisoActual, ImagenPanel mapaGoogle) {
+                        ControladorPanel controlador, int pisoActual, BufferedImage imagenMapaGoogle) {
     getContentPane().removeAll();
     setLayout(new BorderLayout());
+    JPanel container = new JPanel(new CardLayout());
 
     // Panel del mapa
     MapaPanel mapaPanel = new MapaPanel(pisoInicial, ruta, controlador);
-    add(mapaPanel, BorderLayout.CENTER);
+    container.add(mapaPanel,"MapaPanel");
+
+    CardLayout cl = (CardLayout) container.getLayout();
+    cl.show(container, "MapaPanel");
+    add(container);
 
     // Panel inferior principal con BorderLayout
     JPanel panelInferior = new JPanel(new BorderLayout());
@@ -156,6 +165,18 @@ public void iniciarMapa(Edificio edificioActual,Piso pisoInicial, Ruta ruta,
     panelCentro.add(btnBajar);
     panelCentro.add(btnSubir);
 
+    if (imagenMapaGoogle != null){
+        ImagenPanel mapaGoogle = new ImagenPanel(imagenMapaGoogle);
+        container.add(mapaGoogle,"MapaGoogle");
+
+
+        mapaGoogle.setAlignmentX(100);
+        btnMapaGlobal = crearBotonPiso("iconos/earth.png",e -> {
+            cl.next(container);
+        });
+        panelCentro.add(btnMapaGlobal);
+    }
+
     // Panel derecho con botón volver
     JPanel panelDerecho = new JPanel(new FlowLayout(FlowLayout.RIGHT));
     panelDerecho.setOpaque(false);
@@ -176,7 +197,7 @@ public void iniciarMapa(Edificio edificioActual,Piso pisoInicial, Ruta ruta,
 
     add(panelInferior, BorderLayout.SOUTH);
     setVisible(true);
-}
+    }
 
     private JButton crearBotonPiso(String pathIcono, java.awt.event.ActionListener action) {
         JButton boton = new JButton();
@@ -323,8 +344,7 @@ public void iniciarMapa(Edificio edificioActual,Piso pisoInicial, Ruta ruta,
                 controlador.iniciarMapaSala(edificioOrigen,salaOrigen,salaDestino,necesitaAscensor);
             }
             else {
-                controlador.setSalaDestino(salaOrigen.getNombre());
-                controlador.iniciarMapa(necesitaAscensor);
+                controlador.iniciarMapaEdificios(edificioOrigen,edificioDestino,salaOrigen,necesitaAscensor);
             }
         }
 

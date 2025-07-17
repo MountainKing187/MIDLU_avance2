@@ -18,20 +18,19 @@ import java.util.stream.Collectors;
 public class ControladorPanel {
 
     private final Edificio edificio;
-    private Edificio edificioInicio;
-    private Edificio edificioDestino;
+    private BufferedImage googleMapsImagen = null;
     private final ArrayList<Edificio> edificios;
     private final PanelPrincipal ventana;
 
     private int pisoActual;
     private Sala salaDestino;
     private Punto puntoOrigenUsuario;
-    private ArrayList<Ruta> rutaCompleta = new ArrayList<>(); // NUEVO: guarda la ruta total
+    private ArrayList<Ruta> rutaCompleta = new ArrayList<>();
 
     public ControladorPanel(PanelPrincipal ventana) {
         try {
             this.edificios = CargadorEdificios.cargarEdificios("src/main/resources/EdificiosJSON/Edificios.json");
-            this.edificio = CargadorEdificios.cargarDesdeJSON("src/main/resources/EdificiosJSON/EdificioEjemplo.json");
+            this.edificio = edificios.getFirst();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -53,7 +52,7 @@ public class ControladorPanel {
             ruta = rutas.isEmpty() ? new Ruta() : rutas.getFirst();
         }
 
-        ventana.iniciarMapa(edificio,pisoInicial, ruta, this, pisoActual);
+        ventana.iniciarMapa(edificio,pisoInicial, ruta, this, pisoActual, googleMapsImagen);
         ventana.actualizarBotonesPiso(pisoActual, edificio.getPisos().size());
     }
 
@@ -62,21 +61,26 @@ public class ControladorPanel {
         Ruta ruta = new Ruta();
 
         if (salaDestino != null) {
-            ArrayList<Ruta> rutas = Navegador.calcularRutaCompleta(edificioActual,salaOrigen.getEntradas().getFirst(), salaDestino.getEntradas().getFirst(),necesitaAscensor);
+            ArrayList<Ruta> rutas = Navegador.navegarASalaASala(edificioActual,salaOrigen, salaDestino,necesitaAscensor);
             rutaCompleta = rutas;
             ruta = rutas.isEmpty() ? new Ruta() : rutas.getFirst();
         }
 
-        ventana.iniciarMapa(edificioActual,pisoInicial, ruta, this, pisoActual);
+        ventana.iniciarMapa(edificioActual,pisoInicial, ruta, this, pisoActual, googleMapsImagen);
         ventana.actualizarBotonesPiso(pisoActual, edificioActual.getPisos().size());
     }
 
-    public void iniciarMapaEdificios(Edificio edificioActual, Edificio edificioDestino, boolean necesitaAscensor) {
-        BufferedImage mapaGoogle = Navegador.crearRutaEdificios(edificioActual,edificioDestino);
+    public void iniciarMapaEdificios(Edificio edificioActual, Edificio edificioDestino, Sala salaOrigen,boolean necesitaAscensor) {
+        googleMapsImagen = Navegador.crearRutaEdificios(edificioActual,edificioDestino);
+        Piso pisoInicial = edificioActual.getPiso(pisoActual);
+        Ruta ruta = new Ruta();
 
-        ImagenPanel googleMapsImagen = new ImagenPanel(mapaGoogle,)
+        ArrayList<Ruta> rutas = Navegador.navegarASalida(edificioActual,salaOrigen.getEntradas().getFirst(),necesitaAscensor);
+        rutaCompleta = rutas;
 
-        ventana.iniciarMapa(edificioActual,pisoInicial, ruta, this, pisoActual);
+        ruta = rutas.isEmpty() ? new Ruta() : rutas.getFirst();
+
+        ventana.iniciarMapa(edificioActual,pisoInicial, ruta, this, pisoActual, googleMapsImagen);
         ventana.actualizarBotonesPiso(pisoActual, edificioActual.getPisos().size());
     }
 
@@ -93,7 +97,7 @@ public class ControladorPanel {
 
         Ruta ruta = obtenerTramoParaPisoActual();
 
-        ventana.iniciarMapa(edificioActual,piso, ruta, this, pisoActual);
+        ventana.iniciarMapa(edificioActual,piso, ruta, this, pisoActual,googleMapsImagen);
         ventana.actualizarBotonesPiso(pisoActual, edificioActual.getPisos().size());
     }
 

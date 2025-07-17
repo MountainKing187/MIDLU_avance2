@@ -122,15 +122,15 @@
         {
           "tipo": "ESCALERA",
           "id": "escalera_norte_p2",
-          "x": 16,
+          "x": 23,
           "y": 20,
           "conectadoId": "escalera_norte"
         },
         {
           "tipo": "ESCALERA",
           "id": "escalera_sur_p2",
-          "x": 7,
-          "y": 48,
+          "x": 9,
+          "y": 50,
           "conectadoId": "escalera_sur"
         }
       ]

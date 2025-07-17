@@ -6,13 +6,9 @@ import java.awt.image.BufferedImage;
 
 public class ImagenPanel extends JPanel {
     private BufferedImage mapa;
-    private MapaPanel edificioDestino;
-    private MapaPanel edificioOrigen;
 
-    public ImagenPanel(BufferedImage mapa, MapaPanel edificioDestino, MapaPanel edificioOrigen){
+    public ImagenPanel(BufferedImage mapa){
      this.mapa = mapa;
-     this.edificioDestino = edificioDestino;
-     this.edificioOrigen = edificioOrigen;
     }
 
     @Override
