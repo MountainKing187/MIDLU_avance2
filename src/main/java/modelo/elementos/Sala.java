@@ -20,4 +20,8 @@ public class Sala {
     public String getNombre() { return nombre; }
     public ArrayList<Punto> getEntradas() { return entradas; }
 
+    @Override
+    public String toString(){
+        return getNombre();
+    }
 }

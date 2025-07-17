@@ -1,0 +1,132 @@
+{
+  "nombre": "Edificio Ing. Sistemas y Cs. Comput. e Informática",
+  "latitud": -38.747406,
+  "longitud": -72.616406,
+  "pisos": [
+    {
+      "numero": 1,
+      "nombre": "Primer Piso",
+      "imagen": "src/main/resources/imagenes/edificioSistemas/Piso1Sistemas.bmp",
+      "salas": [
+        {
+          "nombre": "Auditorium Dis",
+          "entradas": [
+            {"x": 0, "y": 0}
+          ]
+        },
+        {
+          "nombre": "Lab. Comp. 101",
+          "entradas": [
+            {"x": 0, "y": 0}
+          ]
+        },
+        {
+          "nombre": "Lab. Comp. 102",
+          "entradas": [
+            {"x": 0, "y": 0}
+          ]
+        }
+      ],
+      "puntosAcceso": [
+        {
+          "tipo": "ESCALERA",
+          "id": "escalera_norte",
+          "x": 0,
+          "y": 0,
+          "conectadoId": "escalera_norte_p2"
+        },
+        {
+          "tipo": "ESCALERA",
+          "id": "escalera_sur",
+          "x": 0,
+          "y": 0,
+          "conectadoId": "escalera_sur_p2"
+        }
+      ],
+      "salidas": [
+        {
+          "nombre": "Salida Norte",
+          "x": 0,
+          "y": 0,
+          "esPrincipal": true
+        },
+        {
+          "nombre": "Salida Sur",
+          "x": 0,
+          "y": 0,
+          "esPrincipal": true
+        }
+      ]
+    },
+    {
+      "numero": 2,
+      "nombre": "Segundo Piso",
+      "imagen": "src/main/resources/imagenes/edificioSistemas/Piso2Sistemas.bmp",
+      "salas": [
+        {
+          "nombre": "Lab. Comp. 201",
+          "entradas": [
+            {"x": 0, "y": 0}
+          ]
+        },
+        {
+          "nombre": "Lab. Comp. 202",
+          "entradas": [
+            {"x": 0, "y": 0}
+          ]
+        }
+      ],
+      "puntosAcceso": [
+        {
+          "tipo": "ESCALERA",
+          "id": "escalera_norte_p2",
+          "x": 0,
+          "y": 0,
+          "conectadoId": "escalera_norte"
+        },
+        {
+          "tipo": "ESCALERA",
+          "id": "escalera_sur_p2",
+          "x": 0,
+          "y": 0,
+          "conectadoId": "escalera_sur"
+        }
+      ]
+    },
+    {
+      "numero": 3,
+      "nombre": "Tercer Piso",
+      "imagen": "src/main/resources/imagenes/edificioSistemas/Piso3Sistemas.bmp",
+      "salas": [
+        {
+          "nombre": "Lab. Comp. 301",
+          "entradas": [
+            {"x": 0, "y": 0}
+          ]
+        },
+        {
+          "nombre": "Lab. Comp. 302",
+          "entradas": [
+            {"x": 0, "y": 0}
+          ]
+        }
+      ],
+      "puntosAcceso": [
+        {
+          "tipo": "ESCALERA",
+          "id": "escalera_norte_p3",
+          "x": 0,
+          "y": 0,
+          "conectadoId": "escalera_norte_p2"
+        },
+        {
+          "tipo": "ESCALERA",
+          "id": "escalera_sur_p3",
+          "x": 0,
+          "y": 0,
+          "conectadoId": "escalera_sur_p2"
+        }
+      ]
+    }
+  ]
+}

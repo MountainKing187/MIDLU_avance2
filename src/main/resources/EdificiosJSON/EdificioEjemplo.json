@@ -1,5 +1,7 @@
 {
   "nombre": "Edificio Ejemplo",
+  "latitud": -38.747869,
+  "longitud": -72.616566,
   "pisos": [
     {
       "numero": 1,
@@ -53,8 +55,8 @@
       "salidas": [
         {
           "nombre": "Salida Principal",
-          "x": 27,
-          "y": 74,
+          "x": 19,
+          "y": 31,
           "esPrincipal": true
         }
       ]

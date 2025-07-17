@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.util.List;
 
 public class MapaPanel extends JPanel {
@@ -24,18 +25,6 @@ public class MapaPanel extends JPanel {
         this.piso = piso;
         this.ruta = ruta;
 
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int x = (e.getX() - offsetX) / cellSize;
-                int y = (e.getY() - offsetY) / cellSize;
-
-                if (x >= 0 && y >= 0 && piso != null) {
-                    controlador.manejarClicEnMapa(x, y, piso);
-                }
-            }
-        });
-
     }
 
 
@@ -44,7 +33,6 @@ public class MapaPanel extends JPanel {
         this.ruta = nuevaRuta;
         repaint();
     }
-
 
     @Override
     protected void paintComponent(Graphics g) {

@@ -1,15 +1,22 @@
 package interfaz;
 
+import modelo.edificio.Edificio;
 import modelo.edificio.Piso;
+import modelo.elementos.Sala;
 import modelo.navegacion.Ruta;
 import servicios.ControladorPanel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.Border;
+import java.awt.image.BufferedImage;
+import java.beans.Visibility;
 import java.util.List;
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class PanelPrincipal extends JFrame {
 
@@ -17,6 +24,12 @@ public class PanelPrincipal extends JFrame {
 
     private JButton btnSubir;
     private JButton btnBajar;
+    private JButton btnMapaGlobal;
+    private JComboBox<Edificio> edificioComboInicio;
+    private JComboBox<Edificio> edificioComboDestino;
+    private JComboBox<Sala> salaComboInicio;
+    private JComboBox<Sala> salaComboDestino;
+    private boolean recursosCargadosCorrectamente = true;
 
     public PanelPrincipal() {
         setTitle("Menú Principal");
@@ -46,36 +59,7 @@ public class PanelPrincipal extends JFrame {
         JButton btnIniciar = crearBotonConHover("Iniciar Mapa", iconoNormal, iconoHover);
         JButton btnSalir = crearBotonConHover("Cerrar Programa", iconoNormal, iconoHover);
 
-        btnIniciar.addActionListener(e -> {
-            List<String> salas = controlador.getTodasLasSalas();
-            if (salas.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "No hay salas disponibles en el edificio.");
-                return;
-            }
-
-            JComboBox<String> comboSalas = new JComboBox<>(salas.toArray(new String[0]));
-            JCheckBox chkAscensor = new JCheckBox("Necesito ascensor");
-
-            JPanel panel = new JPanel(new GridLayout(2, 1));
-            panel.add(new JLabel("Selecciona la sala destino:"));
-            panel.add(comboSalas);
-            panel.add(chkAscensor);
-
-            int opcion = JOptionPane.showConfirmDialog(
-                    this,
-                    panel,
-                    "Configuración de ruta",
-                    JOptionPane.OK_CANCEL_OPTION
-            );
-
-            if (opcion == JOptionPane.OK_OPTION) {
-                String salaSeleccionada = (String) comboSalas.getSelectedItem();
-                boolean necesitaAscensor = chkAscensor.isSelected();
-
-                controlador.setSalaDestino(salaSeleccionada);
-                controlador.iniciarMapa(necesitaAscensor);
-            }
-        });
+        btnIniciar.addActionListener(e -> panelDestino());
 
         btnSalir.addActionListener(e -> System.exit(0));
 
@@ -88,6 +72,15 @@ public class PanelPrincipal extends JFrame {
         revalidate();
         repaint();
         setVisible(true);
+        if (!recursosCargadosCorrectamente) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "⚠️ Algunos archivos gráficos no se encontraron.\nPor favor, revisa la instalación.",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE
+            );
+        }
+
     }
 
     private JButton crearBotonConHover(String texto, ImageIcon iconoNormal, ImageIcon iconoHover) {
@@ -121,25 +114,36 @@ public class PanelPrincipal extends JFrame {
     private ImageIcon cargarIcono(String path) {
         try {
             InputStream is = getClass().getClassLoader().getResourceAsStream(path);
-            assert is != null;
+            if (is == null) {
+                System.err.println("❌ No se encontró el archivo: " + path);
+                recursosCargadosCorrectamente = false;
+                return null;
+            }
             Image img = ImageIO.read(is);
             return new ImageIcon(img.getScaledInstance(192, 64, Image.SCALE_SMOOTH));
-        } catch (IOException | NullPointerException e) {
-            System.err.println("❌ Error cargando ícono: " + path);
+        } catch (IOException e) {
+            System.err.println("❌ Error al cargar ícono: " + path);
+            recursosCargadosCorrectamente = false;
             return null;
         }
     }
 
 
+
 //  Inicializacion Mapa, va después que carga MapaPanel
-public void iniciarMapa(Piso pisoInicial, Ruta ruta,
-                        ControladorPanel controlador, int pisoActual) {
+public void iniciarMapa(Edificio edificioActual,Piso pisoInicial, Ruta ruta,
+                        ControladorPanel controlador, int pisoActual, BufferedImage imagenMapaGoogle) {
     getContentPane().removeAll();
     setLayout(new BorderLayout());
+    JPanel container = new JPanel(new CardLayout());
 
     // Panel del mapa
     MapaPanel mapaPanel = new MapaPanel(pisoInicial, ruta, controlador);
-    add(mapaPanel, BorderLayout.CENTER);
+    container.add(mapaPanel,"MapaPanel");
+
+    CardLayout cl = (CardLayout) container.getLayout();
+    cl.show(container, "MapaPanel");
+    add(container);
 
     // Panel inferior principal con BorderLayout
     JPanel panelInferior = new JPanel(new BorderLayout());
@@ -156,10 +160,20 @@ public void iniciarMapa(Piso pisoInicial, Ruta ruta,
     // Panel central con botones subir/bajar
     JPanel panelCentro = new JPanel(new FlowLayout(FlowLayout.CENTER));
     panelCentro.setOpaque(false);
-    btnBajar = crearBotonPiso("iconos/minuspng.png", e -> controlador.cambiarPiso(-1));
-    btnSubir = crearBotonPiso("iconos/pluspng.png", e -> controlador.cambiarPiso(+1));
+    btnBajar = crearBotonPiso("iconos/minuspng.png", e -> controlador.cambiarPiso(edificioActual,-1));
+    btnSubir = crearBotonPiso("iconos/pluspng.png", e -> controlador.cambiarPiso(edificioActual,+1));
     panelCentro.add(btnBajar);
     panelCentro.add(btnSubir);
+
+    if (imagenMapaGoogle != null){
+        ImagenPanel mapaGoogle = new ImagenPanel(imagenMapaGoogle);
+        container.add(mapaGoogle,"MapaGoogle");
+
+        btnMapaGlobal = crearBotonPiso("iconos/earth.png",e -> {
+            cl.next(container);
+        });
+        panelCentro.add(btnMapaGlobal);
+    }
 
     // Panel derecho con botón volver
     JPanel panelDerecho = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -181,7 +195,7 @@ public void iniciarMapa(Piso pisoInicial, Ruta ruta,
 
     add(panelInferior, BorderLayout.SOUTH);
     setVisible(true);
-}
+    }
 
     private JButton crearBotonPiso(String pathIcono, java.awt.event.ActionListener action) {
         JButton boton = new JButton();
@@ -191,9 +205,13 @@ public void iniciarMapa(Piso pisoInicial, Ruta ruta,
                 Image img = ImageIO.read(is);
                 boton.setIcon(new ImageIcon(img.getScaledInstance(32, 32, Image.SCALE_SMOOTH)));
             } else {
+                System.err.println("❌ Falta ícono: " + pathIcono);
+                recursosCargadosCorrectamente = false;
                 boton.setText("?");
             }
         } catch (IOException e) {
+            System.err.println("❌ Error cargando ícono: " + pathIcono);
+            recursosCargadosCorrectamente = false;
             boton.setText("?");
         }
         boton.setPreferredSize(new Dimension(40, 40));
@@ -203,6 +221,7 @@ public void iniciarMapa(Piso pisoInicial, Ruta ruta,
         boton.addActionListener(action);
         return boton;
     }
+
 
     public void actualizarBotonesPiso(int pisoActual, int totalPisos) {
         try {
@@ -235,4 +254,97 @@ public void iniciarMapa(Piso pisoInicial, Ruta ruta,
         boton.setEnabled(habilitado);
     }
 
+    private void updateSalaCombo(JComboBox<Sala> salaCombo, JComboBox<Edificio> edificioCombo) {
+        // Get the currently selected building
+        Edificio selectedEdificio = (Edificio) edificioCombo.getSelectedItem();
+
+        // Clear the current room list
+        salaCombo.removeAllItems();
+
+        if (selectedEdificio != null) {
+            for (Sala sala : controlador.getSalasEdificios(selectedEdificio)) {
+                salaCombo.addItem(sala);
+            }
+        }
+
+        // Enable/disable based on room availability
+        salaCombo.setEnabled(salaCombo.getItemCount() > 0);
+    }
+
+    private void panelDestino(){
+        List<Edificio> edificios = controlador.getEdificios();
+
+        edificioComboInicio = new JComboBox<>();
+        for (Edificio edificio : edificios) {
+            edificioComboInicio.addItem(edificio);
+        }
+
+        edificioComboDestino = new JComboBox<>();
+        for (Edificio edificio : edificios) {
+            edificioComboDestino.addItem(edificio);
+        }
+
+
+        salaComboInicio = new JComboBox<Sala>();
+        salaComboDestino = new JComboBox<Sala>();
+
+        JCheckBox chkAscensor = new JCheckBox("Necesito ascensor");
+
+        JPanel panel = new JPanel(new GridLayout(3, 1));
+        panel.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
+
+        edificioComboInicio.addActionListener(ev -> updateSalaCombo(salaComboInicio,edificioComboInicio));
+        edificioComboDestino.addActionListener(ev -> updateSalaCombo(salaComboDestino,edificioComboDestino));
+
+
+        JPanel inicio = new JPanel(new GridLayout(1,2));
+        JPanel destino = new JPanel(new GridLayout(1,2));
+
+
+        inicio.add(new JLabel("Seleccione Edificio actual: "));
+        inicio.add(edificioComboInicio,BorderLayout.NORTH);
+
+        inicio.add(new JLabel("Seleccione Sala actual: "));
+        inicio.add(salaComboInicio,BorderLayout.SOUTH);
+
+        destino.add(new JLabel("Seleccione Edificio destino: "));
+        destino.add(edificioComboDestino,BorderLayout.NORTH);
+
+
+        destino.add(new JLabel("Seleccione Sala destino: "));
+        destino.add(salaComboDestino,BorderLayout.SOUTH);
+
+        panel.add(inicio);
+        panel.add(destino);
+        panel.add(chkAscensor);
+
+        edificioComboInicio.setSelectedIndex(0);
+        updateSalaCombo(salaComboInicio,edificioComboInicio);
+
+        edificioComboDestino.setSelectedIndex(0);
+        updateSalaCombo(salaComboDestino,edificioComboDestino);
+
+        int opcion = JOptionPane.showConfirmDialog(
+                this,
+                panel,
+                "Configuración de ruta",
+                JOptionPane.OK_CANCEL_OPTION
+        );
+
+        if (opcion == JOptionPane.OK_OPTION) {
+            Edificio edificioOrigen = (Edificio) edificioComboInicio.getSelectedItem();
+            Edificio edificioDestino = (Edificio) edificioComboDestino.getSelectedItem();
+            Sala salaOrigen = (Sala) salaComboInicio.getSelectedItem();
+            Sala salaDestino = (Sala) salaComboDestino.getSelectedItem();
+            boolean necesitaAscensor = chkAscensor.isSelected();
+
+            if (Objects.equals(edificioOrigen.getNombre(), edificioDestino.getNombre())){
+                controlador.iniciarMapaSala(edificioOrigen,salaOrigen,salaDestino,necesitaAscensor);
+            }
+            else {
+                controlador.iniciarMapaEdificios(edificioOrigen,edificioDestino,salaOrigen,necesitaAscensor);
+            }
+        }
+
+    }
 }
