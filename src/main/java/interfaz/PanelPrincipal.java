@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.io.File;
+
 
 public class PanelPrincipal extends JFrame {
 
@@ -345,9 +347,26 @@ public void iniciarMapa(Edificio edificioActual,Piso pisoInicial, Ruta ruta,
                 controlador.iniciarMapaSala(edificioOrigen,salaOrigen,salaDestino,necesitaAscensor);
             }
             else {
+                verificarClaveGoogle();
                 controlador.iniciarMapaEdificios(edificioOrigen,edificioDestino,salaOrigen,necesitaAscensor);
             }
         }
 
+
     }
+
+    private void verificarClaveGoogle() {
+        File keyFile = new File("api_key.txt");
+
+        if (!keyFile.exists()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "❌ No se encontró el archivo 'api_key.txt'.\nLa clave de Google Maps es necesaria para el funcionamiento del mapa.",
+                    "Clave faltante",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            System.exit(1); // Cierra el programa porque no puede continuar sin clave
+        }
+    }
+
 }
