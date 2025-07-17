@@ -10,6 +10,7 @@ import modelo.navegacion.Punto;
 import modelo.navegacion.Ruta;
 import persistencia.CargadorEdificios;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
@@ -87,7 +88,7 @@ public class ControladorPanel {
 
     public void cambiarPiso(Edificio edificioActual,int delta) {
         int nuevoPiso = pisoActual + delta;
-        if (nuevoPiso < 1 || nuevoPiso > edificioActual.getPisos().size()) {
+        if (nuevoPiso < 0 || nuevoPiso > edificioActual.getPisos().size()) {
             System.out.println("⚠️ Piso fuera de rango.");
             return;
         }
@@ -97,7 +98,19 @@ public class ControladorPanel {
 
         Ruta ruta = obtenerTramoParaPisoActual();
 
-        ventana.iniciarMapa(edificioActual,piso, ruta, this, pisoActual,googleMapsImagen);
+        if (pisoActual == 0) {
+            // Switch to ImagePanel
+            ImagenPanel imagenPanel = new ImagenPanel(googleMapsImagen);
+            ventana.getContentPane().removeAll();
+
+            ventana.getContentPane().add(imagenPanel, BorderLayout.CENTER);
+        } else {
+            // Continue with MapaPanel
+            ventana.iniciarMapa(edificioActual, piso, ruta, this, pisoActual, googleMapsImagen);
+        }
+
+        ventana.revalidate();
+        ventana.repaint();
         ventana.actualizarBotonesPiso(pisoActual, edificioActual.getPisos().size());
     }
 
