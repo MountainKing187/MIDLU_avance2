@@ -169,8 +169,6 @@ public void iniciarMapa(Edificio edificioActual,Piso pisoInicial, Ruta ruta,
         ImagenPanel mapaGoogle = new ImagenPanel(imagenMapaGoogle);
         container.add(mapaGoogle,"MapaGoogle");
 
-
-        mapaGoogle.setAlignmentX(100);
         btnMapaGlobal = crearBotonPiso("iconos/earth.png",e -> {
             cl.next(container);
         });
