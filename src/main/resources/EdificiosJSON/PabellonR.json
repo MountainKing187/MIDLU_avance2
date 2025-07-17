@@ -1,0 +1,76 @@
+{
+  "nombre": "Pabellon R",
+  "latitud": -38.747406,
+  "longitud": -72.616406,
+  "pisos": [
+    {
+      "numero": 1,
+      "nombre": "Primer Piso",
+      "imagen": "src/main/resources/imagenes/pabellonR/Piso1R.bmp",
+      "salas": [
+        {
+          "nombre": "RA-101",
+          "entradas": [
+            {"x": 0, "y": 0}
+          ]
+        },
+        {
+          "nombre": "RA-102",
+          "entradas": [
+            {"x": 0, "y": 0}
+          ]
+        },
+        {
+          "nombre": "RA-103",
+          "entradas": [
+            {"x": 0, "y": 0}
+          ]
+        },
+        {
+          "nombre": "RA-104",
+          "entradas": [
+            {"x": 0, "y": 0}
+          ]
+        },
+        {
+          "nombre": "RA-105",
+          "entradas": [
+            {"x": 0, "y": 0}
+          ]
+        },
+        {
+          "nombre": "RA-106",
+          "entradas": [
+            {"x": 0, "y": 0}
+          ]
+        },
+        {
+          "nombre": "RA-107",
+          "entradas": [
+            {"x": 0, "y": 0}
+          ]
+        },
+        {
+          "nombre": "RA-108",
+          "entradas": [
+            {"x": 0, "y": 0}
+          ]
+        }
+      ],
+      "salidas": [
+        {
+          "nombre": "Salida Norte",
+          "x": 0,
+          "y": 0,
+          "esPrincipal": true
+        },
+        {
+          "nombre": "Salida Sur",
+          "x": 0,
+          "y": 0,
+          "esPrincipal": true
+        }
+      ]
+    }
+  ]
+}
