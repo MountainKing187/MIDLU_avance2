@@ -44,7 +44,7 @@ public class EdificioEjemploTest {
         assertTrue(salaCocina.isPresent(), "La sala 'Cocina' debería existir");
     }
 
-    @Disabled
+    @Test
     public void testGoogleMapsApi(){
         ArrayList<Edificio> edificios = CargadorEdificios.cargarEdificios("src/main/resources/EdificiosJSON/Edificios.json");
         BufferedImage mapaRuta = Navegador.crearRutaEdificios(edificios.get(0),edificios.get(1));

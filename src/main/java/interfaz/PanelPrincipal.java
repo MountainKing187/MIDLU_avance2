@@ -338,6 +338,9 @@ public void iniciarMapa(Edificio edificioActual,Piso pisoInicial, Ruta ruta,
             Sala salaDestino = (Sala) salaComboDestino.getSelectedItem();
             boolean necesitaAscensor = chkAscensor.isSelected();
 
+            System.out.println(edificioOrigen.getNombre());
+            System.out.println(edificioDestino.getNombre());
+
             if (Objects.equals(edificioOrigen.getNombre(), edificioDestino.getNombre())){
                 controlador.iniciarMapaSala(edificioOrigen,salaOrigen,salaDestino,necesitaAscensor);
             }
